@@ -20,6 +20,7 @@ namespace Mud.Actions
 		public readonly string Argument;
 		public static ActionArgs GetActionArgs(PlayerCharacter sender, string toParse)
 		{
+			toParse=toParse.ToLower();
 			MudCharacter target=null;
 			string arguments=null;
 			
@@ -38,7 +39,7 @@ namespace Mud.Actions
 					break;
 				}
 				foreach(MudCharacter c in characters){
-					if(c.Name==word)
+					if(c.Name.ToLower()==word)
 					{
 						target=c;
 						break;

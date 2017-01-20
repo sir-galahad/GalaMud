@@ -20,7 +20,7 @@ namespace Mud.Actions
 		public readonly Boolean IsBeneficial;
 		public ActionBuilder(string name,Func<ActionArgs,CharacterAction>builder,bool beneficial)
 		{
-			Name=name;
+			Name=name.ToLower();
 			BuildAction=builder;
 			IsBeneficial=beneficial;
 		}

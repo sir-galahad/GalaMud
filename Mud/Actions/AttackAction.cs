@@ -28,7 +28,7 @@ namespace Mud.Actions
 		public override string DoAction()
 		{
 			int dmg=Character.GetDamage();
-			int dmgdone=Target.TakeDamage(dmg);
+			int dmgdone=Target.TakeDamage(Character,dmg);
 			return string.Format("{0} attacked {1} doing {2} damage ({3} damage absorbed by armor)",Character.Name,Target.Name,dmgdone,dmg-dmgdone);
 		}
 	}

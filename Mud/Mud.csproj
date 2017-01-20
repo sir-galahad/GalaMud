@@ -55,6 +55,7 @@
     <Compile Include="Characters\NpcCharacters\NpcCharacter.cs" />
     <Compile Include="Characters\NpcCharacters\Weakling.cs" />
     <Compile Include="Characters\PlayerCharacter.cs" />
+    <Compile Include="Characters\PlayerWarrior.cs" />
     <Compile Include="Dungeon.cs" />
     <Compile Include="Items\ArmorItem.cs" />
     <Compile Include="Items\MudItem.cs" />

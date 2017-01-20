@@ -53,6 +53,7 @@ namespace Mud.Characters
 		{
 			Level+=1;
 			HitPoints=MaxHitPoints;
+			NotifyPlayer("You increased in skill! you are now level: {0}",Level);
 		}
 		
 		public override void OnDeath()

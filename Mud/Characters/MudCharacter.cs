@@ -46,7 +46,7 @@ namespace Mud.Characters
 		}
 		
 		
-		public virtual int TakeDamage(int damage)
+		public virtual int TakeDamage(MudCharacter attacker,int damage)
 		{
 			///<summary>
 			/// returns the damage actually taken
@@ -71,9 +71,29 @@ namespace Mud.Characters
 		{
 			Room=room;
 		}
+		
 		public virtual void OnDeath()
 		{
-			
+		
+		}
+		
+		protected void AddActionToList(ActionBuilder b)
+		{
+			ActionList.Add(b.Name,b);
+		}
+		public ActionBuilder GetAction(string name)
+		{
+			try{
+				return ActionList[name];
+			}catch(KeyNotFoundException ex){
+				return null;
+			}
+		}
+		public string[] GetActionList()
+		{
+			string[] actions=new string[ActionList.Keys.Count];
+			ActionList.Keys.CopyTo(actions,0);
+			return actions;
 		}
 	}
 }
