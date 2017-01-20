@@ -16,13 +16,14 @@ namespace Mud.Actions
 	public class ActionBuilder
 	{
 		public readonly string Name;
-		public readonly Func<MudCharacter,MudCharacter,CharacterAction> BuildAction;
+		public readonly Func<ActionArgs,CharacterAction> BuildAction;
 		public readonly Boolean IsBeneficial;
-		public ActionBuilder(string name,Func<MudCharacter,MudCharacter,CharacterAction>builder,bool beneficial)
+		public ActionBuilder(string name,Func<ActionArgs,CharacterAction>builder,bool beneficial)
 		{
 			Name=name;
 			BuildAction=builder;
 			IsBeneficial=beneficial;
 		}
+		
 	}
 }

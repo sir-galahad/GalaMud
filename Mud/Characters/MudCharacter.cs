@@ -7,15 +7,17 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
+using System.Collections.Generic;
 using Mud.Actions;
 
-namespace Mud
+namespace Mud.Characters
 {
 	/// <summary>
 	/// Description of Character.
 	/// </summary>
 	public class MudCharacter
 	{
+		protected Dictionary<string,ActionBuilder> ActionList=new Dictionary<string, ActionBuilder>();
 		//public event Action<MudCharacter,string> NotifyPlayer;
 		public string Name{get;private set;}
 		//public virtual bool IsPlayer{get{return false;}set{}}
@@ -63,13 +65,7 @@ namespace Mud
 		}
 		public virtual void GetAction()
 		{
-			//Room.AddActionToQueue(new NullAction(this));
-			Random rand=new Random();
-			PlayerCharacter[] players=Room.GetPlayersInRoom();
-			int index;
-			index=rand.Next(0,players.Length);
-			ActionBuilder a=AttackAction.GetBuilder();
-			Room.AddActionToQueue(a.BuildAction(this,players[index]));
+		
 		}
 		public virtual void SetRoom(DungeonRoom room)
 		{

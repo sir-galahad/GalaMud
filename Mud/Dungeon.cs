@@ -8,6 +8,7 @@
  */
 using System;
 using System.Collections.Generic;
+using Mud.Characters;
 namespace Mud
 {
 	/// <summary>

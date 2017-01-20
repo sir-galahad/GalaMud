@@ -7,7 +7,7 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
-
+using Mud.Characters;
 namespace Mud.Actions
 {
 	/// <summary>
@@ -15,6 +15,13 @@ namespace Mud.Actions
 	/// </summary>
 	public class NullAction:CharacterAction
 	{
+		public static ActionBuilder GetActionBuilder()
+		{
+			return new ActionBuilder("wait",
+			                         O=>{return new NullAction(O.Sender);},
+			                         true);
+			                         
+		}
 		public NullAction(MudCharacter c):base(c)
 		{
 		}

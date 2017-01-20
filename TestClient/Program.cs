@@ -8,6 +8,8 @@
  */
 using System;
 using Mud.Actions;
+using Mud.Characters;
+using Mud.Characters.NpcCharacters;
 using Mud;
 namespace TestClient
 {
@@ -18,7 +20,7 @@ namespace TestClient
 			Dungeon d=new Dungeon(3,3,new DungeonPosition(2,2));
 			PlayerCharacter player=new PlayerCharacter("*test*");
 			PlayerCharacter player2=new PlayerCharacter("*test2*");
-			MudCharacter mob=new MudCharacter("MOB");
+			MudCharacter mob=new Weakling("Skeleton");
 			player2.OnNotifyPlayer+=(P,S)=>Console.WriteLine(S);
 			player.OnNotifyPlayer+=(P,S)=>{Console.WriteLine(S); Console.Out.Flush();};
 			d.AddCharacter(player,d.StartingRoom);

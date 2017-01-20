@@ -7,7 +7,7 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
-
+using Mud.Characters;
 namespace Mud.Actions
 {
 	/// <summary>
@@ -16,8 +16,32 @@ namespace Mud.Actions
 	public enum MapDirection{north,south,east,west}
 	public class MoveAction:CharacterAction
 	{
+		public static ActionBuilder GetActionBuilder()
+		{
+			return new ActionBuilder("move",
+			                  (o)=>{
+			                  	bool validArg=false;
+			                  	foreach(string a in DirectionString)
+			                  	{
+			                  		if(a==o.Argument){validArg=true;break;}
+			                  	}
+			                  	if(validArg==false){throw new ArgumentException("move can only use one of the four cardinal directions");}
+			                  	return new MoveAction(o.Sender,o.Argument);
+			                  },true);
+		}
 		public static string[] DirectionString={"north","south","east","west"};
 		MapDirection direction;
+		public MoveAction(MudCharacter character,string direction):base(character)
+		{
+			MapDirection dir=MapDirection.north;
+			for(int x=1;x<DirectionString.Length;x++){
+				if(DirectionString[x]==direction)
+				{
+					dir=(MapDirection)x;
+				}
+			}
+			this.direction=dir;
+		}
 		public MoveAction(MudCharacter character,MapDirection dir):base(character)
 		{
 			direction=dir;

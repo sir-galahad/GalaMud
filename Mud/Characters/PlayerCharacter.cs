@@ -8,7 +8,7 @@
  */
 using System;
 
-namespace Mud
+namespace Mud.Characters
 {
 	/// <summary>
 	/// Description of PlayerCharacter.

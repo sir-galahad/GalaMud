@@ -12,6 +12,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Text;
 using Mud.Actions;
+using Mud.Characters;
 namespace Mud
 {
 	/// <summary>
