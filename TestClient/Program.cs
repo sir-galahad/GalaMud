@@ -19,12 +19,12 @@ namespace TestClient
 		{
 			Dungeon d=new Dungeon(3,3,new DungeonPosition(2,2));
 			PlayerCharacter player=new PlayerWarrior("galahad");
-			//PlayerCharacter player2=new PlayerCharacter("*test2*");
+			PlayerCharacter player2=new PlayerCharacter("*test2*");
 			MudCharacter mob=new Weakling("Skeleton");
-			//player2.OnNotifyPlayer+=(P,S)=>Console.WriteLine(S);
+			player2.OnNotifyPlayer+=(P,S)=>Console.WriteLine(S);
 			player.OnNotifyPlayer+=(P,S)=>{Console.WriteLine(S); Console.Out.Flush();};
 			d.AddCharacter(player,d.StartingRoom);
-			//d.AddCharacter(player2,d.StartingRoom);
+			d.AddCharacter(player2,d.StartingRoom);
 			d.AddCharacter(mob,new DungeonPosition(1,1));
 			d.AddCharacter(new Weakling("Skeleton"),new DungeonPosition(2,1));
 			d.AddCharacter(new Weakling("Skeleton"),new DungeonPosition(0,1));
