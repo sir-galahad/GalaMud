@@ -21,26 +21,36 @@ namespace Mud.Items
 		{
 		}
 		
+		public List<String> GetItems()
+		{
+			List<string> items=new List<string>();
+			foreach(string s in Items.Keys)
+			{
+				if(GetCountItem(s)>0)
+					items.Add(s);
+			}
+			return items;
+		}
 		public bool AddItem(MudItem item)
 		{
 			int itemCount=0;
 			try{
-				itemCount=Items[item.Name].Count;
+				itemCount=Items[item.Name.ToLower()].Count;
 			}catch(KeyNotFoundException){
-				Items.Add(item.Name,new Stack<MudItem>());
+				Items.Add(item.Name.ToLower(),new Stack<MudItem>());
 			}
 			if(itemCount>=item.MaxCount)
 				return false;
 			
-			Items[item.Name].Push(item);
+			Items[item.Name.ToLower()].Push(item);
 			return true;
 		}
 		
-		public int GetCountItem(MudItem item)
+		public int GetCountItem(string item)
 		{
 			int itemCount=0;
 			try{
-				itemCount=Items[item.Name].Count;
+				itemCount=Items[item].Count;
 			}catch(KeyNotFoundException){
 				//itemCount definitely 0
 			}
@@ -50,7 +60,7 @@ namespace Mud.Items
 		public void RemoveItem(MudItem item)
 		{
 			try{
-			if(GetCountItem(item)==0) return;
+			if(GetCountItem(item.Name)==0) return;
 			Items[item.Name].Pop();
 			}catch(KeyNotFoundException){}
 		}
@@ -62,6 +72,18 @@ namespace Mud.Items
 				item=Items[name].Pop();
 			}catch(KeyNotFoundException){}
 			return item;
+		}
+		
+		public bool HasItem(string name)
+		{
+			bool result=false;
+			try{
+				if(Items[name].Count>0)
+				{
+					result=true;
+				}
+			}catch(KeyNotFoundException){}
+			return result;
 		}
 	}
 }

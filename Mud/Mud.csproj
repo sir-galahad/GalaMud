@@ -48,6 +48,7 @@
     <Compile Include="Actions\ActionBuilder.cs" />
     <Compile Include="Actions\AttackAction.cs" />
     <Compile Include="Actions\CharacterAction.cs" />
+    <Compile Include="Actions\EquipAction.cs" />
     <Compile Include="Actions\MoveAction.cs" />
     <Compile Include="Actions\NullAction.cs" />
     <Compile Include="Actions\TargetedAction.cs" />

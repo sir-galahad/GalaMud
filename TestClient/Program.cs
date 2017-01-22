@@ -40,7 +40,10 @@ namespace TestClient
 						ActionArgs a=ActionArgs.GetActionArgs(player,arg);
 					
 						if(builder!=null && a!=null){
-							player.Room.AddActionToQueue(builder.BuildAction(a));
+							CharacterAction act=builder.BuildAction(a);
+							if(act!=null)
+								player.Room.AddActionToQueue(builder.BuildAction(a));
+							
 						}
 					}catch(ArgumentException ex){
 						player.NotifyPlayer(ex.Message);
@@ -57,6 +60,15 @@ namespace TestClient
 					Console.Out.Flush();
 					
 				}
+				if(inputArgs[0].ToLower()=="inventory")
+				{
+					foreach(string s in player.GetInventory())
+					{
+						Console.WriteLine(s);
+					}
+				}
+				
+				Console.WriteLine("armor: {0} {1}",player.Armor,player.EquipedArmor);
 				
 			}
 		}

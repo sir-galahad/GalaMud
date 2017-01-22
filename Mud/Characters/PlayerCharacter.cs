@@ -31,7 +31,7 @@ namespace Mud.Characters
 		}
 		public override int Armor {
 			get {
-				if(EquipedWeapon==null)
+				if(EquipedArmor==null)
 					return base.Armor;
 				return EquipedArmor.GetArmor(this);
 			}
@@ -43,6 +43,8 @@ namespace Mud.Characters
 		// override bool IsPlayer{get{return true;}set{}}
 		public PlayerCharacter(string Name):base(Name)
 		{
+			EquipedWeapon=null;
+			EquipedArmor=null;
 		}
 		
 		public override int GetDamage()
@@ -86,8 +88,13 @@ namespace Mud.Characters
 		
 		public void ReceiveItem(MudItem a)
 		{
-			inventory.AddItem(a);
-			NotifyPlayer("You looted {0}",a.Name);
+			if(inventory.AddItem(a))
+				NotifyPlayer("You looted {0}",a.Name);
+		}
+		
+		public bool InventoryHasItem(string itemName)
+		{
+			return inventory.HasItem(itemName);
 		}
 		
 		public bool Equip(string itemname)
@@ -107,16 +114,25 @@ namespace Mud.Characters
 				{
 					inventory.AddItem(tmp);
 				}
+				EquipedWeapon=(item as WeaponItem);
+				result=true;
 			}
 			if(item is ArmorItem)
 			{
-				tmp=EquipedArmor as ArmorItem;
+				tmp=EquipedArmor;
 				if(tmp!=null)
 				{
 					inventory.AddItem(tmp);
 				}
+				EquipedArmor=(item as ArmorItem);
+				result=true;
 			}
-			return false;
+			return result;
+		}
+		
+		public List<string> GetInventory()
+		{
+			return inventory.GetItems();
 		}
 	}
 }

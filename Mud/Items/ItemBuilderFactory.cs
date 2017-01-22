@@ -27,7 +27,7 @@ namespace Mud.Items
 		Dictionary<string,Func<MudItem>> BuilderTable=new Dictionary<string, Func<MudItem>>();
 		public ItemBuilderFactory()
 		{
-			BuilderTable.Add("rusty-spoon",()=>{return new SimpleWeapon("Rusty-Spoon","A ridiculously weak weapon",1);});
+			BuilderTable.Add("rusty-spoon",()=>{return new SimpleWeapon("Rusty-Spoon","A ridiculously weak weapon",2);});
 			BuilderTable.Add("loincloth",()=>{return new SimpleArmor("Loincloth","Is this really even armor?",2);});
 		}
 		

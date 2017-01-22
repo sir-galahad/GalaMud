@@ -51,7 +51,7 @@ namespace Mud.Characters
 			///<summary>
 			/// returns the damage actually taken
 			/// </summary>
-			
+			damage-=Armor/2;
 			this.HitPoints-=damage;
 			return damage;	
 		}
