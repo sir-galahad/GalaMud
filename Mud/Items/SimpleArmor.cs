@@ -16,9 +16,11 @@ namespace Mud.Items
 	public class SimpleArmor:ArmorItem
 	{
 		int Armor;
+		
 		public SimpleArmor(string name, string desc,int armor):base(name,desc)
 		{
 			Armor=armor;
+			MaxCount=1;
 		}
 		public override int GetArmor(PlayerCharacter player)
 		{

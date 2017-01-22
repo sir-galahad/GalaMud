@@ -19,6 +19,7 @@ namespace Mud.Items
 		public SimpleWeapon(string name, string desc, int dmg):base(name,desc)
 		{
 			Damage=dmg;
+			MaxCount=1;
 		}
 		
 		public override int GetDamage(PlayerCharacter player)

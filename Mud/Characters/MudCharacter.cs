@@ -85,7 +85,7 @@ namespace Mud.Characters
 		{
 			try{
 				return ActionList[name];
-			}catch(KeyNotFoundException ex){
+			}catch(KeyNotFoundException){
 				return null;
 			}
 		}

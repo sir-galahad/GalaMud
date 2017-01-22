@@ -26,6 +26,8 @@ namespace TestClient
 			d.AddCharacter(player,d.StartingRoom);
 			//d.AddCharacter(player2,d.StartingRoom);
 			d.AddCharacter(mob,new DungeonPosition(1,1));
+			d.AddCharacter(new Weakling("Skeleton"),new DungeonPosition(2,1));
+			d.AddCharacter(new Weakling("Skeleton"),new DungeonPosition(0,1));
 			while(true){
 				string input=Console.ReadLine();
 				string[] inputArgs=input.Split(' ');
@@ -33,10 +35,15 @@ namespace TestClient
 				if(inputArgs.Length>=1){
 					string action=inputArgs[0].ToLower();
 					string arg=input.Remove(0,action.Length);
-					ActionBuilder builder=player.GetAction(action);
-					ActionArgs a=ActionArgs.GetActionArgs(player,arg);
-					if(builder!=null && a!=null){
-						player.Room.AddActionToQueue(builder.BuildAction(a));
+					try{
+						ActionBuilder builder=player.GetAction(action);
+						ActionArgs a=ActionArgs.GetActionArgs(player,arg);
+					
+						if(builder!=null && a!=null){
+							player.Room.AddActionToQueue(builder.BuildAction(a));
+						}
+					}catch(ArgumentException ex){
+						player.NotifyPlayer(ex.Message);
 					}
 				}
 				if(inputArgs[0].ToLower()=="help")

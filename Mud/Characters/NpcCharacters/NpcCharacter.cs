@@ -8,14 +8,17 @@
  */
 using System;
 using System.Collections.Generic;
+using Mud.Items;
 namespace Mud.Characters.NpcCharacters
 {
 	/// <summary>
 	/// Just a place holder in case we want to make sweeping npc changes later
 	/// </summary>
 	public class NpcCharacter:MudCharacter
-	{
-		List<PlayerCharacter> Attackers=new List<PlayerCharacter>();
+	{	
+		Random randGen=new Random();
+		protected List<LootTableElement> LootTable=new List<LootTableElement>();
+		List<MudCharacter> Attackers=new List<MudCharacter>();
 		public NpcCharacter(string name):base(name)
 		{
 		}
@@ -29,14 +32,33 @@ namespace Mud.Characters.NpcCharacters
 			Attackers.Add(attacker as PlayerCharacter);
 			return damage;
 		}
-		
+	
 		public override void OnDeath()
 		{
 			base.OnDeath();
-			foreach(PlayerCharacter c in Attackers)
+			foreach(MudCharacter c in Attackers)
 			{
-				c.AddExperience(Level);
+				if(c is PlayerCharacter)
+				{
+					PlayerCharacter p=(c as PlayerCharacter);
+					p.AddExperience(Level);
+					List<MudItem> loot=GetLoot();
+					foreach(MudItem item in loot)
+						p.ReceiveItem(item);
+				}
 			}
 		}
+		
+		public List<MudItem> GetLoot()
+		{
+			List<MudItem> loot=new List<MudItem>();
+			foreach(LootTableElement e in LootTable)
+			{
+				int x=randGen.Next(0,1000);
+				if(x<e.Chance)loot.Add(e.Builder());
+			}
+			return loot;
+		}
+		
 	}
 }

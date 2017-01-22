@@ -58,6 +58,9 @@
     <Compile Include="Characters\PlayerWarrior.cs" />
     <Compile Include="Dungeon.cs" />
     <Compile Include="Items\ArmorItem.cs" />
+    <Compile Include="Items\Inventory.cs" />
+    <Compile Include="Items\LootTableElement.cs" />
+    <Compile Include="Items\ItemBuilderFactory.cs" />
     <Compile Include="Items\MudItem.cs" />
     <Compile Include="Items\SimpleArmor.cs" />
     <Compile Include="Items\SimpleWeapon.cs" />

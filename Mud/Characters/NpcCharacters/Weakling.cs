@@ -8,6 +8,7 @@
  */
 using System;
 using Mud.Actions;
+using Mud.Items;
 namespace Mud.Characters.NpcCharacters
 {
 	/// <summary>
@@ -20,6 +21,9 @@ namespace Mud.Characters.NpcCharacters
 			ActionList.Add("null1",NullAction.GetActionBuilder());
 			ActionList.Add("null2",NullAction.GetActionBuilder());
 			ActionList.Add("attack",AttackAction.GetActionBuilder());
+			ItemBuilderFactory factory=ItemBuilderFactory.GetInstance();
+			LootTable.Add(new LootTableElement(999,factory.GetBuilder("rusty-spoon")));
+			LootTable.Add(new LootTableElement(999,factory.GetBuilder("loincloth")));
 		}
 		
 		public override void GetAction()
