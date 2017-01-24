@@ -70,6 +70,14 @@ namespace Mud.Actions
 					break;
 			
 			}
+			foreach(MudCharacter c in Character.Room.GetCharactersInRoom())
+			{
+				if(!(c is PlayerCharacter))
+				{
+					return "Some sort of magic barrier prevents you from leaving a room with live evil minions";
+				}
+				
+			}
 			NewRoom=Character.Dungeon.GetRoom(x,y);
 			if(NewRoom==null) return String.Format("{0} ran into the wall",Character.Name);
 			room.RemoveCharacter(Character);

@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Text;
 using Mud.Actions;
 using Mud.Characters;
+using Mud.Characters.NpcCharacters;
 namespace Mud
 {
 	/// <summary>
@@ -21,6 +22,7 @@ namespace Mud
 	public class DungeonRoom
 	{
 		public string Status{get;private set;}
+		List<string> SpawnList=new List<string>();
 		int timeoutSeconds=10;
 		Object lockobject=new Object();
 		List<MudCharacter> NonPlayersInRoom=new List<MudCharacter>();
@@ -71,15 +73,21 @@ namespace Mud
 		public void AddCharacter(MudCharacter character)
 		{
 			lock(lockobject){
+				character.SetRoom(this);
 				if(character is PlayerCharacter){
+					if(PlayersInRoom.Count==0)
+					{
+						SpawnNpcs();
+					}
 					PlayersInRoom.Add(character as PlayerCharacter);
 					Status=GenerateStatus();
 					int characterCount=PlayersInRoom.Count+NonPlayersInRoom.Count;
 					(character as PlayerCharacter).NotifyPlayer("entering the room you see {0} entities:{1}",characterCount,Status);
+				}else{
+					NonPlayersInRoom.Add(character); 
+					return;
 				}
-				else{NonPlayersInRoom.Add(character); return;}
 				Status=GenerateStatus();
-				character.SetRoom(this);
 				if(ActionTask==null){
 					if(time==DateTime.MinValue)time=DateTime.Now.AddSeconds(timeoutSeconds);
 					ActionTask=Task.Factory.StartNew(new Action(ExecuteQueue));
@@ -112,6 +120,10 @@ namespace Mud
 				}
 				else{NonPlayersInRoom.Remove(character);}
 				Status = GenerateStatus();
+				
+				if(PlayersInRoom.Count==0){
+					NonPlayersInRoom.Clear();
+				}
 			}
 		}
 		
@@ -244,6 +256,21 @@ namespace Mud
 			
 			}catch(Exception ex){
 				Console.WriteLine(ex.Message);
+				Console.WriteLine(ex.StackTrace);
+			}
+		}
+		
+		public void AddNpcsToSpawn(string[] mobs)
+		{
+			SpawnList.AddRange(mobs);
+		}
+		
+		public virtual void SpawnNpcs()
+		{
+			NpcFactory factory=NpcFactory.GetInstance();
+			foreach(string s in SpawnList)
+			{
+				AddCharacter(factory.GetCharacter(s));
 			}
 		}
 	}

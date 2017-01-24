@@ -28,11 +28,12 @@ namespace Mud.Characters.NpcCharacters
 		
 		public override void GetAction()
 		{
+			PlayerCharacter[] players=null;
 			//Room.AddActionToQueue(new NullAction(this));
 			ActionBuilder[] actions=new ActionBuilder[ActionList.Values.Count];
 			ActionList.Values.CopyTo(actions,0);
 			Random rand=new Random();
-			PlayerCharacter[] players=Room.GetPlayersInRoom();
+			players=Room.GetPlayersInRoom();
 			int index;
 			index=rand.Next(0,players.Length);
 			ActionBuilder a=actions[rand.Next(0,ActionList.Values.Count)];

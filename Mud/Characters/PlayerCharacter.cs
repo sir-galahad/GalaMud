@@ -23,7 +23,7 @@ namespace Mud.Characters
 		public ArmorItem EquipedArmor{get;protected set;}
 		public override int MaxHitPoints {
 			get {
-				return (int)(Level*1.5);
+				return (int)(Level*2);
 			}
 			protected set {
 				base.MaxHitPoints = value;
@@ -72,8 +72,10 @@ namespace Mud.Characters
 		
 		void LevelUp()
 		{
+			Experience=Experience%(Level*Level);
 			Level+=1;
 			HitPoints=MaxHitPoints;
+			
 			NotifyPlayer("You increased in skill! you are now level: {0}",Level);
 		}
 		

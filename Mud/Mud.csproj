@@ -54,10 +54,12 @@
     <Compile Include="Actions\TargetedAction.cs" />
     <Compile Include="Characters\MudCharacter.cs" />
     <Compile Include="Characters\NpcCharacters\NpcCharacter.cs" />
+    <Compile Include="Characters\NpcCharacters\NpcFactory.cs" />
     <Compile Include="Characters\NpcCharacters\Weakling.cs" />
     <Compile Include="Characters\PlayerCharacter.cs" />
     <Compile Include="Characters\PlayerWarrior.cs" />
     <Compile Include="Dungeon.cs" />
+    <Compile Include="HealingRoom.cs" />
     <Compile Include="Items\ArmorItem.cs" />
     <Compile Include="Items\Inventory.cs" />
     <Compile Include="Items\LootTableElement.cs" />

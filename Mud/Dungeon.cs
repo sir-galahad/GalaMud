@@ -49,5 +49,10 @@ namespace Mud
 		{
 			return GetRoom(pos.X,pos.Y);
 		}
+		public void AddNpcsToRoom(string [] mobs,DungeonPosition pos)
+		{
+			DungeonRoom room=GetRoom(pos);
+			room.AddNpcsToSpawn(mobs);
+		}
 	}
 }

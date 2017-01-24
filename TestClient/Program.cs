@@ -25,9 +25,9 @@ namespace TestClient
 			player.OnNotifyPlayer+=(P,S)=>{Console.WriteLine(S); Console.Out.Flush();};
 			d.AddCharacter(player,d.StartingRoom);
 			d.AddCharacter(player2,d.StartingRoom);
-			d.AddCharacter(mob,new DungeonPosition(1,1));
-			d.AddCharacter(new Weakling("Skeleton"),new DungeonPosition(2,1));
-			d.AddCharacter(new Weakling("Skeleton"),new DungeonPosition(0,1));
+			d.AddNpcsToRoom((new string[]{"skeleton"}),new DungeonPosition(1,1));
+			d.AddNpcsToRoom((new string[]{"skeleton"}),new DungeonPosition(2,1));
+			d.AddNpcsToRoom((new string[]{"skeleton"}),new DungeonPosition(0,1));
 			while(true){
 				string input=Console.ReadLine();
 				string[] inputArgs=input.Split(' ');
@@ -67,8 +67,6 @@ namespace TestClient
 						Console.WriteLine(s);
 					}
 				}
-				
-				Console.WriteLine("armor: {0} {1}",player.Armor,player.EquipedArmor);
 				
 			}
 		}
