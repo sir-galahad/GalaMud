@@ -21,6 +21,7 @@ namespace Mud
 	/// </summary>
 	public class DungeonRoom
 	{
+		public string Message{get;set;}
 		public string Status{get;private set;}
 		List<string> SpawnList=new List<string>();
 		int timeoutSeconds=10;
@@ -34,6 +35,7 @@ namespace Mud
 		Task ActionTask=null;
 		public DungeonRoom(Dungeon parent,DungeonPosition pos)
 		{
+			Message="Another dirty, damp dungeon chamber";
 			parentDungeon=parent;
 			Position=pos;
 		}
@@ -55,7 +57,7 @@ namespace Mud
 			}
 		}
 		
-		public void AddActionToQueue(CharacterAction action)
+		public virtual void AddActionToQueue(CharacterAction action)
 		{
 			lock(lockobject)
 			{	foreach(CharacterAction a in ActionQueue){
@@ -70,7 +72,7 @@ namespace Mud
 			}
 		}
 		
-		public void AddCharacter(MudCharacter character)
+		public virtual void AddCharacter(MudCharacter character)
 		{
 			lock(lockobject){
 				character.SetRoom(this);
@@ -82,6 +84,7 @@ namespace Mud
 					PlayersInRoom.Add(character as PlayerCharacter);
 					Status=GenerateStatus();
 					int characterCount=PlayersInRoom.Count+NonPlayersInRoom.Count;
+					(character as PlayerCharacter).NotifyPlayer("Entering the room you find: {0}",Message);
 					(character as PlayerCharacter).NotifyPlayer("entering the room you see {0} entities:{1}",characterCount,Status);
 				}else{
 					NonPlayersInRoom.Add(character); 
@@ -112,11 +115,15 @@ namespace Mud
 			}
 			return sb.ToString();
 		}
+		
 		public void RemoveCharacter(MudCharacter character)
 		{
 			lock(lockobject){
 				if(PlayersInRoom.Contains(character as PlayerCharacter)){
 					PlayersInRoom.Remove(character as PlayerCharacter);
+					if(PlayersInRoom.Count==0){
+						NonPlayersInRoom.Clear();
+					}
 				}
 				else{NonPlayersInRoom.Remove(character);}
 				Status = GenerateStatus();
@@ -130,6 +137,11 @@ namespace Mud
 		public PlayerCharacter[] GetPlayersInRoom()
 		{
 			return PlayersInRoom.ToArray();
+		}
+		
+		public MudCharacter[] GetNonPlayersInRoom()
+		{
+			return NonPlayersInRoom.ToArray();
 		}
 		void ExecuteQueue()
 		{	
@@ -216,7 +228,7 @@ namespace Mud
 							if(c.HitPoints<=0)
 							{
 								NotifyPlayers("{0} has died.",c.StatusString());
-								PlayersInRoom.Remove(c);
+								this.RemoveCharacter(c);
 								c.OnDeath();
 								continue;
  							}
@@ -272,6 +284,16 @@ namespace Mud
 			{
 				AddCharacter(factory.GetCharacter(s));
 			}
+		}
+		
+		public bool HasCharacter(MudCharacter c)
+		{
+			MudCharacter[] characters=GetCharactersInRoom();
+			foreach(MudCharacter other in characters)
+			{
+				if(c==other){return true;}
+			}
+			return false;
 		}
 	}
 }

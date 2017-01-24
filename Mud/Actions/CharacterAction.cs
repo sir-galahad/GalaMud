@@ -15,12 +15,15 @@ namespace Mud.Actions
 	/// </summary>
 	public abstract class CharacterAction
 	{
+		public bool Beneficial{get;protected set;}
 		public MudCharacter Character{get;private set;}
 
 		public CharacterAction(MudCharacter c )
 		{
 			Character=c;
+			Beneficial=false;
 		}
+		
 		
 		public abstract string DoAction();
 	}

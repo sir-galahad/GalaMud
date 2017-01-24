@@ -49,6 +49,11 @@ namespace Mud
 		{
 			return GetRoom(pos.X,pos.Y);
 		}
+		
+		public void SetRoom(DungeonPosition pos,DungeonRoom room)
+		{
+			Map[pos.X,pos.Y]=room;
+		}
 		public void AddNpcsToRoom(string [] mobs,DungeonPosition pos)
 		{
 			DungeonRoom room=GetRoom(pos);

@@ -23,13 +23,17 @@ namespace Mud.Actions
 		}
 		public AttackAction(MudCharacter Character,MudCharacter target):base(Character,target)
 		{
-			
+			Beneficial=false;
 		}
 		public override string DoAction()
 		{
+			base.DoAction();
+			if(Target==null){return string.Format("No available targets for {0}'s",Character.Name);}
 			int dmg=Character.GetDamage();
 			int dmgdone=Target.TakeDamage(Character,dmg);
 			return string.Format("{0} attacked {1} doing {2} damage ({3} damage absorbed by armor)",Character.Name,Target.Name,dmgdone,dmg-dmgdone);
 		}
+		
+	
 	}
 }

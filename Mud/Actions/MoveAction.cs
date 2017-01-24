@@ -33,6 +33,7 @@ namespace Mud.Actions
 		MapDirection direction;
 		public MoveAction(MudCharacter character,string direction):base(character)
 		{
+			Beneficial=true;
 			MapDirection dir=MapDirection.north;
 			for(int x=1;x<DirectionString.Length;x++){
 				if(DirectionString[x]==direction)
@@ -83,7 +84,6 @@ namespace Mud.Actions
 			room.RemoveCharacter(Character);
 			room.NotifyPlayers(Character.Name+" has left the room heading " + MoveAction.DirectionString[(int)direction]);
 			NewRoom.AddCharacter(Character);
-			//NewRoom.NotifyPlayers(Character.Name + " has entered the room");
 			return "";
 		
 		}

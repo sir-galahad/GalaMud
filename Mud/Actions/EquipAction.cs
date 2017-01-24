@@ -35,7 +35,8 @@ namespace Mud.Actions
 		
 		string ItemName;
 		public EquipAction(MudCharacter character,string name):base(character)
-		{ 
+		{ 	
+			Beneficial=true;
 			ItemName=name;
 		}
 		

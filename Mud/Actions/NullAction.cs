@@ -24,6 +24,7 @@ namespace Mud.Actions
 		}
 		public NullAction(MudCharacter c):base(c)
 		{
+			Beneficial=true;
 		}
 		public override string DoAction()
 		{

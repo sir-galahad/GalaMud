@@ -21,7 +21,23 @@ namespace Mud.Actions
 			Target=target;
 		}
 		public override string DoAction()
-		{
+		{	
+			Random rand=new Random();
+			MudCharacter[] characters;
+			if(!Character.Room.HasCharacter(Target))
+			{
+				//attempt to pick a new target
+				if(Target is PlayerCharacter)
+				{
+					characters=Character.Room.GetPlayersInRoom();
+				}else{
+					characters=Character.Room.GetNonPlayersInRoom();
+				}
+				if(characters.Length==0){Target=null; return"";}
+				Target=characters[rand.Next(0,characters.Length)];
+				
+				
+			}
 			return "";
 		}
 	}

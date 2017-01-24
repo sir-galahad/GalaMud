@@ -28,6 +28,7 @@ namespace TestClient
 			d.AddNpcsToRoom((new string[]{"skeleton"}),new DungeonPosition(1,1));
 			d.AddNpcsToRoom((new string[]{"skeleton"}),new DungeonPosition(2,1));
 			d.AddNpcsToRoom((new string[]{"skeleton"}),new DungeonPosition(0,1));
+			d.SetRoom(new DungeonPosition(0,1),new HealingRoom(d,new DungeonPosition(0,1)));
 			while(true){
 				string input=Console.ReadLine();
 				string[] inputArgs=input.Split(' ');
@@ -66,6 +67,11 @@ namespace TestClient
 					{
 						Console.WriteLine(s);
 					}
+				}
+				if(inputArgs[0].ToLower()=="status")
+				{
+					Console.WriteLine(player.Room.Status);
+					Console.Out.Flush();
 				}
 				
 			}

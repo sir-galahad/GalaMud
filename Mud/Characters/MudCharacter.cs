@@ -96,5 +96,11 @@ namespace Mud.Characters
 			ActionList.Keys.CopyTo(actions,0);
 			return actions;
 		}
+		
+		public void Heal(int amount)
+		{
+			HitPoints+=amount;
+			if(HitPoints>MaxHitPoints)HitPoints=MaxHitPoints;
+		}
 	}
 }
