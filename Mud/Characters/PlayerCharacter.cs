@@ -12,7 +12,8 @@ using Mud.Items;
 namespace Mud.Characters
 {
 	/// <summary>
-	/// Description of PlayerCharacter.
+	/// A character operated by an actual player
+	/// special cases like equipable items and inventory added
 	/// </summary>
 	public class PlayerCharacter:MudCharacter
 	{
@@ -21,6 +22,7 @@ namespace Mud.Characters
 		int Experience=0;
 		public WeaponItem EquipedWeapon{get;protected set;}
 		public ArmorItem EquipedArmor{get;protected set;}
+		
 		public override int MaxHitPoints {
 			get {
 				return (int)(Level*2);
@@ -29,6 +31,7 @@ namespace Mud.Characters
 				base.MaxHitPoints = value;
 			}
 		}
+		
 		public override int Armor {
 			get {
 				if(EquipedArmor==null)
@@ -39,12 +42,15 @@ namespace Mud.Characters
 				base.Armor = value;
 			}
 		}
+		
 		public event Action<PlayerCharacter,string>OnNotifyPlayer;
 		// override bool IsPlayer{get{return true;}set{}}
+		
 		public PlayerCharacter(string Name):base(Name)
 		{
 			EquipedWeapon=null;
 			EquipedArmor=null;
+			this.HitPoints=MaxHitPoints;
 		}
 		
 		public override int GetDamage()
@@ -52,6 +58,7 @@ namespace Mud.Characters
 			if(EquipedWeapon==null)return 1;
 			return EquipedWeapon.GetDamage(this);
 		}
+		
 		public void NotifyPlayer(string msg, params object[] args)
 		{
 			OnNotifyPlayer(this,string.Format(msg, args));
@@ -62,6 +69,7 @@ namespace Mud.Characters
 			base.StartTurn();
 			
 		}
+		
 		public void AddExperience(int exp)
 		{
 			Experience+=exp;

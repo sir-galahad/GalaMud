@@ -54,6 +54,7 @@
     <Compile Include="Actions\NullAction.cs" />
     <Compile Include="Actions\TargetedAction.cs" />
     <Compile Include="Characters\MudCharacter.cs" />
+    <Compile Include="Characters\NpcCharacters\BasicMob.cs" />
     <Compile Include="Characters\NpcCharacters\NpcCharacter.cs" />
     <Compile Include="Characters\NpcCharacters\NpcFactory.cs" />
     <Compile Include="Characters\NpcCharacters\Weakling.cs" />

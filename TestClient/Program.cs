@@ -43,7 +43,14 @@ namespace TestClient
 						if(builder!=null && a!=null){
 							CharacterAction act=builder.BuildAction(a);
 							if(act!=null)
-								player.Room.AddActionToQueue(builder.BuildAction(a));
+							{
+								if(act is TargetedAction && ((TargetedAction)act).Target==null)
+								{
+									player.NotifyPlayer("Targeted actions must have a valid target");
+									continue;
+								}
+							player.Room.AddActionToQueue(builder.BuildAction(a));
+							}
 							
 						}
 					}catch(ArgumentException ex){
