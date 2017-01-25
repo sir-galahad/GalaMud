@@ -149,7 +149,11 @@ namespace Mud
 				bool ready=false;
 				foreach(MudCharacter character in NonPlayersInRoom)
 				{
-					character.GetAction();
+					character.StartTurn();
+				}
+				foreach(MudCharacter character in PlayersInRoom)
+				{
+					character.StartTurn();
 				}
 				//give all characters a chance to put in an action
 				while(!ready)

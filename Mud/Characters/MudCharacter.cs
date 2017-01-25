@@ -9,7 +9,7 @@
 using System;
 using System.Collections.Generic;
 using Mud.Actions;
-
+using Mud.Effects;
 namespace Mud.Characters
 {
 	/// <summary>
@@ -20,6 +20,7 @@ namespace Mud.Characters
 		protected Dictionary<string,ActionBuilder> ActionList=new Dictionary<string, ActionBuilder>();
 		//public event Action<MudCharacter,string> NotifyPlayer;
 		public string Name{get;private set;}
+		public List<IEffect> Effects=new List<IEffect>();
 		//public virtual bool IsPlayer{get{return false;}set{}}
 		public virtual int HitPoints{get;protected set;}
 		public virtual int MaxHitPoints{get;protected set;}
@@ -64,8 +65,12 @@ namespace Mud.Characters
 			string output=string.Format("[{0} L:{1} HP:({2}/{3})]",name,Level,HitPoints,MaxHitPoints);
 			return output;
 		}
-		public virtual void GetAction()
+		public virtual void StartTurn()
 		{
+			foreach(IEffect e in Effects.ToArray())
+			{
+				e.StartTurn();
+			}
 		
 		}
 		public virtual void SetRoom(DungeonRoom room)

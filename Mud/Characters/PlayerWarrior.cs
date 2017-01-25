@@ -20,6 +20,7 @@ namespace Mud.Characters
 			AddActionToList(MoveAction.GetActionBuilder());
 			AddActionToList(AttackAction.GetActionBuilder());
 			AddActionToList(EquipAction.GetActionBuilder());
+			AddActionToList(BonkAction.GetActionBuilder());
 		}
 	}
 }

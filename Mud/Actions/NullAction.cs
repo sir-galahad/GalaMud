@@ -15,20 +15,22 @@ namespace Mud.Actions
 	/// </summary>
 	public class NullAction:CharacterAction
 	{
+		string Message;
 		public static ActionBuilder GetActionBuilder()
 		{
 			return new ActionBuilder("wait",
-			                         O=>{return new NullAction(O.Sender);},
+			                         O=>{return new NullAction(O.Sender,"waits a turn");},
 			                         true);
 			                         
 		}
-		public NullAction(MudCharacter c):base(c)
+		public NullAction(MudCharacter c,string message):base(c)
 		{
 			Beneficial=true;
+			Message=message;
 		}
 		public override string DoAction()
 		{
-			return string.Format("{0} does nothing",Character.Name);
+			return string.Format("{0} {1}",Character.Name,Message);
 		}
 	}
 }

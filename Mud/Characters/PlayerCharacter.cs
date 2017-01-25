@@ -56,8 +56,10 @@ namespace Mud.Characters
 		{
 			OnNotifyPlayer(this,string.Format(msg, args));
 		}
-		public override void GetAction()
+	
+		public override void StartTurn()
 		{
+			base.StartTurn();
 			
 		}
 		public void AddExperience(int exp)

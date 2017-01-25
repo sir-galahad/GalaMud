@@ -47,6 +47,7 @@
     <Compile Include="Actions\ActionArgs.cs" />
     <Compile Include="Actions\ActionBuilder.cs" />
     <Compile Include="Actions\AttackAction.cs" />
+    <Compile Include="Actions\BonkAction.cs" />
     <Compile Include="Actions\CharacterAction.cs" />
     <Compile Include="Actions\EquipAction.cs" />
     <Compile Include="Actions\MoveAction.cs" />
@@ -59,6 +60,8 @@
     <Compile Include="Characters\PlayerCharacter.cs" />
     <Compile Include="Characters\PlayerWarrior.cs" />
     <Compile Include="Dungeon.cs" />
+    <Compile Include="Effects\IEffect.cs" />
+    <Compile Include="Effects\StunEffect.cs" />
     <Compile Include="HealingRoom.cs" />
     <Compile Include="Items\ArmorItem.cs" />
     <Compile Include="Items\Inventory.cs" />
@@ -77,6 +80,7 @@
     <Folder Include="Characters\NpcCharacters" />
     <Folder Include="Items" />
     <Folder Include="Characters" />
+    <Folder Include="Effects" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

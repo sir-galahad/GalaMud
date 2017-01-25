@@ -26,8 +26,9 @@ namespace Mud.Characters.NpcCharacters
 			LootTable.Add(new LootTableElement(999,factory.GetBuilder("loincloth")));
 		}
 		
-		public override void GetAction()
+		public override void StartTurn()
 		{
+			base.StartTurn();
 			PlayerCharacter[] players=null;
 			//Room.AddActionToQueue(new NullAction(this));
 			ActionBuilder[] actions=new ActionBuilder[ActionList.Values.Count];
