@@ -30,10 +30,10 @@ namespace Mud.Actions
 			foreach(IEffect e in Target.Effects)
 			{
 				if(e.GetName().ToLower()=="stun")
-					return string.Format("{0} attempted to stun {1}, but {1} is already stunned",Character.Name,Target.Name);
+					return string.Format("\t{0} attempted to stun {1}, but {1} is already stunned",Character.StatusString(),Target.StatusString());
 			}
 			Target.Effects.Add(new StunEffect(Character,Target,3));
-			return string.Format("{0} BONKS {1} over the head doing no damage, but stunning them",Character.Name,Target.Name);
+			return string.Format("\t{0} BONKS {1} over the head doing no damage, but stunning them",Character.StatusString(),Target.StatusString());
 		}
 	}
 }

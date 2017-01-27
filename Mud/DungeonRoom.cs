@@ -75,7 +75,7 @@ namespace Mud
 		public virtual void AddCharacter(MudCharacter character)
 		{
 			lock(lockobject){
-				character.SetRoom(this);
+				
 				if(character is PlayerCharacter){
 					if(PlayersInRoom.Count==0)
 					{
@@ -85,18 +85,27 @@ namespace Mud
 					Status=GenerateStatus();
 					int characterCount=PlayersInRoom.Count+NonPlayersInRoom.Count;
 					(character as PlayerCharacter).NotifyPlayer("Entering the room you find: {0}",Message);
-					(character as PlayerCharacter).NotifyPlayer("entering the room you see {0} entities:{1}",characterCount,Status);
 				}else{
 					NonPlayersInRoom.Add(character); 
+					character.SetRoom(this);
 					return;
 				}
+				
 				Status=GenerateStatus();
+				character.SetRoom(this);
 				if(ActionTask==null){
 					if(time==DateTime.MinValue)time=DateTime.Now.AddSeconds(timeoutSeconds);
 					ActionTask=Task.Factory.StartNew(new Action(ExecuteQueue));
 				}
-				NotifyPlayers("{0} has entered the room",character.StatusString());
-					
+				
+				foreach(PlayerCharacter p in PlayersInRoom)
+				{
+					if(p!=character)
+					{
+						p.NotifyPlayer("{0} has entered the room",character.StatusString());
+					}
+				}
+				//character.SetRoom(this);
 			}
 		}
 		
@@ -231,7 +240,7 @@ namespace Mud
 							PlayerCharacter c=PlayersInRoom[x];
 							if(c.HitPoints<=0)
 							{
-								NotifyPlayers("{0} has died.",c.StatusString());
+								NotifyPlayers("\t{0} has died.",c.StatusString());
 								this.RemoveCharacter(c);
 								c.OnDeath();
 								continue;
@@ -244,7 +253,7 @@ namespace Mud
 							MudCharacter c=NonPlayersInRoom[x];
 							if(c.HitPoints<=0)
 							{
-								NotifyPlayers("{0} has died",c.StatusString());
+								NotifyPlayers("\t{0} has died",c.StatusString());
 								NonPlayersInRoom.Remove(c);
 								c.OnDeath();
 								continue;

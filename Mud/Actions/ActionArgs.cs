@@ -38,13 +38,18 @@ namespace Mud.Actions
 					arguments=word;
 					break;
 				}
-				foreach(MudCharacter c in characters){
-					if(c.Name.ToLower()==word)
+				int targetNum;
+				if(int.TryParse(word,out targetNum))
+				{
+					if(targetNum>=sender.Roomates.Length)
 					{
-						target=c;
-						break;
+						sender.NotifyPlayer("not a valid target");
+						return null;
 					}
+				   	target=sender.Roomates[targetNum];
+				   	continue;
 				}
+				
 				arguments=word;
 			}
 			return new ActionArgs(sender,target,arguments);

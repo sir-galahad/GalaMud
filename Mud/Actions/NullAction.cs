@@ -30,7 +30,7 @@ namespace Mud.Actions
 		}
 		public override string DoAction()
 		{
-			return string.Format("{0} {1}",Character.Name,Message);
+			return string.Format("\t{0} {1}",Character.StatusString(),Message);
 		}
 	}
 }

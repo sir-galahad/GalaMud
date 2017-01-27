@@ -29,7 +29,10 @@ namespace Mud.Characters.NpcCharacters
 			damage= base.TakeDamage(attacker,damage);
 			if(attacker==null || ! (attacker is PlayerCharacter))return damage;
 			if(damage<=0)return damage;
-			Attackers.Add(attacker as PlayerCharacter);
+			if(!Attackers.Contains(attacker))
+			{
+				Attackers.Add(attacker as PlayerCharacter);
+			}
 			return damage;
 		}
 	

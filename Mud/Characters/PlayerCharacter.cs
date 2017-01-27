@@ -17,11 +17,22 @@ namespace Mud.Characters
 	/// </summary>
 	public class PlayerCharacter:MudCharacter
 	{
-		
+		public event Action<PlayerCharacter> OnTurnStart;
+		public event Action<PlayerCharacter> OnNewRoomates;
 		Inventory inventory=new Inventory();
 		int Experience=0;
+		public MudCharacter[] Roomates{get;private set;}
 		public WeaponItem EquipedWeapon{get;protected set;}
 		public ArmorItem EquipedArmor{get;protected set;}
+		public override int Power {
+			get {
+			if(EquipedWeapon==null)return 1;
+			return EquipedWeapon.GetDamage(this);
+			}
+			protected set {
+				base.Power = value;
+			}
+		}
 		
 		public override int MaxHitPoints {
 			get {
@@ -53,11 +64,6 @@ namespace Mud.Characters
 			this.HitPoints=MaxHitPoints;
 		}
 		
-		public override int GetDamage()
-		{
-			if(EquipedWeapon==null)return 1;
-			return EquipedWeapon.GetDamage(this);
-		}
 		
 		public void NotifyPlayer(string msg, params object[] args)
 		{
@@ -67,13 +73,39 @@ namespace Mud.Characters
 		public override void StartTurn()
 		{
 			base.StartTurn();
-			
+			MudCharacter[] tmp=Room.GetCharactersInRoom();
+			if(!TestRoomates(tmp))
+			{
+				Roomates=tmp;
+				if(OnNewRoomates!=null)
+				{
+					OnNewRoomates(this);
+				}
+			}
+			if(OnTurnStart!=null){OnTurnStart(this);}
+		}
+		
+		bool TestRoomates(MudCharacter[] newRoomates)
+		{	
+			if(Roomates==null)return false;
+			if(Roomates.Length!=newRoomates.Length)
+			{
+				return false;
+			}
+			for(int x=0;x<Roomates.Length;x++)
+			{
+				if(Roomates[x]!=newRoomates[x])
+				{
+					return false;
+				}
+			}
+			return true;
 		}
 		
 		public void AddExperience(int exp)
 		{
 			Experience+=exp;
-			NotifyPlayer("You have gained {0} experience points",exp);
+			NotifyPlayer("\t*You have gained {0} experience points",exp);
 			if(Experience>=Level*Level)
 			{
 				LevelUp();
@@ -86,12 +118,13 @@ namespace Mud.Characters
 			Level+=1;
 			HitPoints=MaxHitPoints;
 			
-			NotifyPlayer("You increased in skill! you are now level: {0}",Level);
+			NotifyPlayer("\t*You increased in skill! you are now level: {0}",Level);
 		}
 		
 		public override void OnDeath()
 		{
-			NotifyPlayer("You have died and will be sent back to the begining");
+			Roomates=new MudCharacter[0];
+			NotifyPlayer("****You have died and will be sent back to the begining****");
 			DungeonRoom r=Dungeon.GetRoom(Dungeon.StartingRoom);
 			HitPoints=MaxHitPoints;
 			r.AddCharacter(this);
@@ -101,7 +134,7 @@ namespace Mud.Characters
 		public void ReceiveItem(MudItem a)
 		{
 			if(inventory.AddItem(a))
-				NotifyPlayer("You looted {0}",a.Name);
+				NotifyPlayer("\t*You looted {0}",a.Name);
 		}
 		
 		public bool InventoryHasItem(string itemName)
@@ -145,6 +178,16 @@ namespace Mud.Characters
 		public List<string> GetInventory()
 		{
 			return inventory.GetItems();
+		}
+		
+		public override void SetRoom(DungeonRoom room)
+		{
+			base.SetRoom(room);
+			Roomates=room.GetCharactersInRoom();
+			if(OnNewRoomates!=null)
+			{
+				OnNewRoomates(this);
+			}
 		}
 	}
 }

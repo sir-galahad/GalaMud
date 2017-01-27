@@ -25,6 +25,7 @@ namespace Mud.Characters
 		public virtual int HitPoints{get;protected set;}
 		public virtual int MaxHitPoints{get;protected set;}
 		public virtual int Armor{get;protected set;}
+		public virtual int Power{get;protected set;}
 		public virtual int Level{get;protected set;}
 		public DungeonRoom Room{get;protected set;}
 		public Dungeon Dungeon{get;protected set;}
@@ -33,6 +34,7 @@ namespace Mud.Characters
 			this.Name=Name;
 			HitPoints=1;
 			Armor=1;
+			Power=1;
 			Level=1;
 			MaxHitPoints=Level*Level;
 		}
@@ -41,10 +43,6 @@ namespace Mud.Characters
 		internal void JoinDungeon(Dungeon d){
 			Dungeon=d;
 		}
-		public virtual int GetDamage()
-		{
-			return 1;
-		}
 		
 		
 		public virtual int TakeDamage(MudCharacter attacker,int damage)
@@ -52,6 +50,7 @@ namespace Mud.Characters
 			///<summary>
 			/// returns the damage actually taken
 			/// </summary>
+			if(damage==0)return 0;
 			damage-=Armor/2;
 			this.HitPoints-=damage;
 			if(HitPoints<0)HitPoints=0;
@@ -65,6 +64,7 @@ namespace Mud.Characters
 			string output=string.Format("[{0} L:{1} HP:({2}/{3})]",name,Level,HitPoints,MaxHitPoints);
 			return output;
 		}
+		
 		public virtual void StartTurn()
 		{
 			foreach(IEffect e in Effects.ToArray())

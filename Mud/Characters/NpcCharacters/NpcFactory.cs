@@ -27,7 +27,9 @@ namespace Mud.Characters.NpcCharacters
 		Dictionary<string,Func<NpcCharacter>> NpcGenList=new Dictionary<string, Func<NpcCharacter>>();
 		NpcFactory()
 		{
-			NpcGenList.Add("skeleton",()=>new Weakling("Skeleton"));
+			NpcGenList.Add("goblin",()=>new Weakling("Goblin"));
+			NpcGenList.Add("skeleton",()=>new BasicMob("Skeleton",2));
+			NpcGenList.Add("orc",()=>new BasicMob("Orc",3));
 		}
 		
 		public NpcCharacter GetCharacter(string name)

@@ -7,7 +7,8 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
-
+using Mud.Actions;
+using Mud.Items;
 namespace Mud.Characters.NpcCharacters
 {
 	/// <summary>
@@ -15,10 +16,36 @@ namespace Mud.Characters.NpcCharacters
 	/// </summary>
 	public class BasicMob:NpcCharacter
 	{
-		
-		public BasicMob(string name):base(name)
+		public int Damage;
+		public BasicMob(string name, int level):base(name)
 		{
-				
+			MaxHitPoints=level;
+			Level=level;
+			Damage=level;
+			Armor=level;
+			Power=level;
+			HitPoints=MaxHitPoints;
+			ItemBuilderFactory factory=ItemBuilderFactory.GetInstance();
+			ActionList.Add("attack",AttackAction.GetActionBuilder());
+			if(level==2)
+			{
+				LootTable.Add(new Mud.Items.LootTableElement(500,factory.GetBuilder("quilted-armor")));
+				LootTable.Add(new LootTableElement(500,factory.GetBuilder("rusty-dagger")));             
+			}
+		}
+		
+		public override void StartTurn()
+		{
+			base.StartTurn();
+			PlayerCharacter[] players=null;
+			ActionBuilder[] actions=new ActionBuilder[ActionList.Values.Count];
+			ActionList.Values.CopyTo(actions,0);
+			Random rand=new Random();
+			players=Room.GetPlayersInRoom();
+			int index;
+			index=rand.Next(0,players.Length);
+			ActionBuilder a=actions[rand.Next(0,ActionList.Values.Count)];
+			Room.AddActionToQueue(a.BuildAction(new ActionArgs(this,players[index])));
 		}
 	}
 }

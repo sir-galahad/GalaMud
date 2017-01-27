@@ -15,6 +15,7 @@ namespace Mud.Actions
 	/// </summary>
 	public class AttackAction : TargetedAction
 	{
+		static Random RandGen=new Random();
 		public static ActionBuilder GetActionBuilder()
 		{
 			return new ActionBuilder("attack",
@@ -29,9 +30,11 @@ namespace Mud.Actions
 		{
 			base.DoAction();
 			if(Target==null){return string.Format("No available targets for {0}'s",Character.Name);}
-			int dmg=Character.GetDamage();
-			int dmgdone=Target.TakeDamage(Character,dmg);
-			return string.Format("{0} attacked {1} doing {2} damage ({3} damage absorbed by armor)",Character.Name,Target.Name,dmgdone,dmg-dmgdone);
+			double dmg=Character.Power;
+			double modifier=((double) RandGen.Next(40,61))/50.0;
+			dmg=(modifier*dmg);
+			int dmgdone=Target.TakeDamage(Character,(int)dmg);
+			return string.Format("\t{0} attacked {1} doing {2} damage ({3} damage absorbed by armor)",Character.StatusString(),Target.StatusString(),dmgdone,(int)dmg-dmgdone);
 		}
 		
 	

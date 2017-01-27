@@ -23,8 +23,9 @@ namespace Mud
 		
 		public override void AddCharacter(Mud.Characters.MudCharacter character)
 		{
-			base.AddCharacter(character);
 			character.Heal(character.MaxHitPoints);
+			base.AddCharacter(character);
+			
 		}
 		public override void AddActionToQueue(Mud.Actions.CharacterAction action)
 		{
