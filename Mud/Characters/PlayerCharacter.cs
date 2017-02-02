@@ -133,6 +133,20 @@ namespace Mud.Characters
 		
 		public void ReceiveItem(MudItem a)
 		{
+			int count=0;
+			if(a is WeaponItem && a==EquipedWeapon)
+			{
+				count++;
+			}
+			if(a is ArmorItem && a==EquipedArmor)
+			{
+				count++;
+			}
+			count+=inventory.GetCountItem(a.Name);
+			if(count>=a.MaxCount)
+			{
+				return;
+			}
 			if(inventory.AddItem(a))
 				NotifyPlayer("\t*You looted {0}",a.Name);
 		}

@@ -30,7 +30,7 @@ namespace Mud.Items
 			BuilderTable.Add("rusty-spoon",()=>{return new SimpleWeapon("Rusty-Spoon","A ridiculously weak weapon",2);});
 			BuilderTable.Add("loincloth",()=>{return new SimpleArmor("Loincloth","Is this really even armor?",2);});
 			BuilderTable.Add("rusty-dagger",()=>{return new SimpleWeapon("Rusty-Dagger","At least this is an actual weapon",3);});
-			BuilderTable.Add("quilted-armor",()=>{return new SimpleArmor("Quilted-Armor","Basic armor made from several layers of cloth",3);});
+			BuilderTable.Add("quilted-armor",()=>{return new SimpleArmor("Quilted-Armor","Basic armor made from several layers of cloth",4);});
 		
 		}
 		

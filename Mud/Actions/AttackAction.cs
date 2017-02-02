@@ -33,6 +33,7 @@ namespace Mud.Actions
 			double dmg=Character.Power;
 			double modifier=((double) RandGen.Next(40,61))/50.0;
 			dmg=(modifier*dmg);
+			Console.WriteLine(dmg.ToString());
 			int dmgdone=Target.TakeDamage(Character,(int)dmg);
 			return string.Format("\t{0} attacked {1} doing {2} damage ({3} damage absorbed by armor)",Character.StatusString(),Target.StatusString(),dmgdone,(int)dmg-dmgdone);
 		}

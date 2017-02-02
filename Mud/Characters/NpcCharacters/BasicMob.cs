@@ -29,8 +29,11 @@ namespace Mud.Characters.NpcCharacters
 			ActionList.Add("attack",AttackAction.GetActionBuilder());
 			if(level==2)
 			{
-				LootTable.Add(new Mud.Items.LootTableElement(500,factory.GetBuilder("quilted-armor")));
-				LootTable.Add(new LootTableElement(500,factory.GetBuilder("rusty-dagger")));             
+				LootTable.Add(new Mud.Items.LootTableElement(500,factory.GetBuilder("rusty-dagger")));            
+			}
+			if(level==3)
+			{
+				LootTable.Add(new LootTableElement(500,factory.GetBuilder("quilted-armor"))); 
 			}
 		}
 		
