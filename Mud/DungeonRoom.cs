@@ -84,7 +84,7 @@ namespace Mud
 					PlayersInRoom.Add(character as PlayerCharacter);
 					Status=GenerateStatus();
 					int characterCount=PlayersInRoom.Count+NonPlayersInRoom.Count;
-					(character as PlayerCharacter).NotifyPlayer("Entering the room you find: {0}",Message);
+					(character as PlayerCharacter).NotifyPlayer("\nEntering the room you find: {0}",Message);
 				}else{
 					NonPlayersInRoom.Add(character); 
 					character.SetRoom(this);

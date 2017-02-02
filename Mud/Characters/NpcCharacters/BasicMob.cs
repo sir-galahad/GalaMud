@@ -19,7 +19,7 @@ namespace Mud.Characters.NpcCharacters
 		public int Damage;
 		public BasicMob(string name, int level):base(name)
 		{
-			MaxHitPoints=level;
+			MaxHitPoints=(int)(level*1.8);
 			Level=level;
 			Damage=level;
 			Armor=level;
