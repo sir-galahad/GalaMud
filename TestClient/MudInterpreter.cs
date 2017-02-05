@@ -139,8 +139,9 @@ namespace TestClient
 		public void Shutdown()
 		{
 			if(player!=null){
-				player.Room.RemoveCharacter(player);
+				
 				player.Room.NotifyPlayers("{0} disconnected",player.Name);
+				player.Room.RemoveCharacter(player);
 			}
 		}
 	}

@@ -74,12 +74,12 @@ namespace Mud.Characters
 		{
 			base.StartTurn();
 			MudCharacter[] tmp=Room.GetCharactersInRoom();
-			if(!TestRoomates(tmp))
+			//if(!TestRoomates(tmp))
 			{
 				Roomates=tmp;
 				if(OnNewRoomates!=null)
 				{
-					OnNewRoomates(this);
+					//OnNewRoomates(this);
 				}
 			}
 			if(OnTurnStart!=null){OnTurnStart(this);}
@@ -198,6 +198,15 @@ namespace Mud.Characters
 		{
 			base.SetRoom(room);
 			Roomates=room.GetCharactersInRoom();
+			if(OnNewRoomates!=null)
+			{
+				//OnNewRoomates(this);
+			}
+		}
+		
+		public void NewRoomates()
+		{
+			Roomates=Room.GetCharactersInRoom();
 			if(OnNewRoomates!=null)
 			{
 				OnNewRoomates(this);

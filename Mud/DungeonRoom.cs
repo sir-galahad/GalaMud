@@ -69,6 +69,10 @@ namespace Mud
 					}
 				}
 				ActionQueue.Enqueue(action);
+				if(action.Character is PlayerCharacter)
+				{
+					(action.Character as PlayerCharacter).NotifyPlayer("Action registered");
+				}
 			}
 		}
 		
@@ -100,12 +104,13 @@ namespace Mud
 				
 				foreach(PlayerCharacter p in PlayersInRoom)
 				{
-					if(p!=character)
+					//(p!=character)
 					{
 						p.NotifyPlayer("{0} has entered the room",character.StatusString());
+						p.NewRoomates();
 					}
 				}
-				//character.SetRoom(this);
+				
 			}
 		}
 		
@@ -140,6 +145,11 @@ namespace Mud
 				if(PlayersInRoom.Count==0){
 					NonPlayersInRoom.Clear();
 				}
+				foreach(PlayerCharacter p in PlayersInRoom)
+				{
+					p.NewRoomates();
+				}
+
 			}
 		}
 		
@@ -187,7 +197,12 @@ namespace Mud
 						}
 						if(DateTime.Now>time) //if time is up execute all actions in the queue 
 						{
-							ready=true;
+							if(ActionQueue.Count==0&&PlayersInRoom.Count>0)
+							{
+								time=DateTime.Now.AddSeconds(timeoutSeconds);
+							}else{
+								ready=true;
+							}
 						}
 					}
 					Thread.Sleep(100);

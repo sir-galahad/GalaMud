@@ -38,6 +38,10 @@ namespace TestClient
 		public void SendString(string output)
 		{
 			byte[] buffer=Encoding.UTF8.GetBytes(output);
+			if(!ConnectionSocket.Connected)
+			{
+				return;
+			}
 			lock(lockObject)
 			{
 				try

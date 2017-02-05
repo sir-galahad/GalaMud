@@ -75,6 +75,8 @@ namespace Mud.Characters
 			}
 		
 		}
+		
+	
 		public virtual void SetRoom(DungeonRoom room)
 		{
 			Room=room;
