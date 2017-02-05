@@ -48,8 +48,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MudInterpreter.cs" />
+    <Compile Include="MudConnection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="MudServer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

@@ -19,39 +19,8 @@ namespace TestClient
 		public static void Main(string[] args)
 		{
 			Program prog=new Program();
-			prog.RunGame();
-		}
-		
-		PlayerCharacter player=null;
-		MudCharacter[] currentRoomates=new MudCharacter[0];
-		
-		public void NewRoomates(PlayerCharacter p)
-		{
-			
-			currentRoomates=player.Roomates;
-			string msg="In the room now |   ";
-			for(int x=0;x<player.Roomates.Length;x++)
-			{
-				msg+=string.Format("{0}:{1}  ",x,player.Roomates[x].StatusString());
-			}
-			//if(player.Roomates.Length>1)
-			player.NotifyPlayer(msg);
-			
-		}
-		
-		
-		public void RunGame()
-		{
-			MudCharacter[] currentRoomates=new MudCharacter[0];
 			Dungeon d=new Dungeon(3,3,new DungeonPosition(2,2));
-			player=new PlayerWarrior("galahad");
-			PlayerCharacter player2=new PlayerCharacter("*test2*");
 			MudCharacter mob=new Weakling("Skeleton");
-			player2.OnNotifyPlayer+=(P,S)=>Console.WriteLine(S);
-			player.OnNotifyPlayer+=(P,S)=>{Console.WriteLine(S); Console.Out.Flush();};
-			player.OnNewRoomates+=new Action<PlayerCharacter>(NewRoomates);
-			d.AddCharacter(player,d.StartingRoom);
-			d.AddCharacter(player2,d.StartingRoom);
 			d.AddNpcsToRoom((new string[]{"goblin"}),new DungeonPosition(1,2));
 			d.AddNpcsToRoom((new string[]{"goblin"}),new DungeonPosition(0,2));
 			d.AddNpcsToRoom((new string[]{"skeleton"}),new DungeonPosition(2,1));
@@ -60,6 +29,30 @@ namespace TestClient
 			d.AddNpcsToRoom((new string[]{"orc"}),new DungeonPosition(1,0));
 			d.AddNpcsToRoom((new string[]{"orc","orc"}),new DungeonPosition(2,0));
 			d.SetRoom(new DungeonPosition(0,1),new HealingRoom(d,new DungeonPosition(0,1)));
+			d.SetRoom(new DungeonPosition(2,2),new HealingRoom(d,new DungeonPosition(2,2)));
+			MudServer server=new MudServer(d);
+			server.Start();
+			//prog.RunGame();
+		}
+		
+		PlayerCharacter player=null;
+		MudCharacter[] currentRoomates=new MudCharacter[0];
+			
+		
+		public void RunGame()
+		{
+			
+			Dungeon d=new Dungeon(3,3,new DungeonPosition(2,2));
+			MudCharacter mob=new Weakling("Skeleton");
+			d.AddNpcsToRoom((new string[]{"goblin"}),new DungeonPosition(1,2));
+			d.AddNpcsToRoom((new string[]{"goblin"}),new DungeonPosition(0,2));
+			d.AddNpcsToRoom((new string[]{"skeleton"}),new DungeonPosition(2,1));
+			d.AddNpcsToRoom((new string[]{"skeleton"}),new DungeonPosition(1,1));
+			d.AddNpcsToRoom((new string[]{"orc"}),new DungeonPosition(0,0));
+			d.AddNpcsToRoom((new string[]{"orc"}),new DungeonPosition(1,0));
+			d.AddNpcsToRoom((new string[]{"orc","orc"}),new DungeonPosition(2,0));
+			d.SetRoom(new DungeonPosition(0,1),new HealingRoom(d,new DungeonPosition(0,1)));
+			d.SetRoom(new DungeonPosition(2,2),new HealingRoom(d,new DungeonPosition(2,2)));
 			while(true){
 				string input=Console.ReadLine();
 				string[] inputArgs=input.Split(' ');

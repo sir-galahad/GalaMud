@@ -52,6 +52,8 @@ namespace Mud.Characters
 			/// </summary>
 			if(damage==0)return 0;
 			damage-=Armor/2;
+			if(damage<0)
+				damage=0;
 			this.HitPoints-=damage;
 			if(HitPoints<0)HitPoints=0;
 			return damage;	

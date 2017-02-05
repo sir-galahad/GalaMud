@@ -24,7 +24,7 @@ namespace Mud
 		public string Message{get;set;}
 		public string Status{get;private set;}
 		List<string> SpawnList=new List<string>();
-		int timeoutSeconds=10;
+		int timeoutSeconds=20;
 		Object lockobject=new Object();
 		List<MudCharacter> NonPlayersInRoom=new List<MudCharacter>();
 		List<PlayerCharacter> PlayersInRoom=new List<PlayerCharacter>();

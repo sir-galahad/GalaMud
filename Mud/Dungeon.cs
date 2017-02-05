@@ -38,7 +38,7 @@ namespace Mud
 		{
 			Map[pos.X,pos.Y].AddCharacter(character);
 			character.JoinDungeon(this);
-			character.SetRoom(Map[pos.X,pos.Y]);
+			//character.SetRoom(Map[pos.X,pos.Y]);
 		}
 		public DungeonRoom GetRoom(int xloc,int yloc)
 		{	if(xloc<0||xloc>=mapX) return null;
