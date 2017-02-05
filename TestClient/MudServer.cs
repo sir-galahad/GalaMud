@@ -52,7 +52,7 @@ namespace TestClient
 				{
 					if(s==Listener)
 					{
-						Console.WriteLine("listener");
+						//Console.WriteLine("listener");
 						NewConnection();
 					}else{
 						x++;

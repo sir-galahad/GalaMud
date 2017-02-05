@@ -48,6 +48,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Logger.cs" />
     <Compile Include="MudInterpreter.cs" />
     <Compile Include="MudConnection.cs" />
     <Compile Include="Program.cs" />

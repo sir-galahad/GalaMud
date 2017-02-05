@@ -104,7 +104,7 @@ namespace TestClient
 						
 					}else{
 						user=input;
-						Connection.SendString("password:");
+						Connection.SendString("password: ");
 						status=InterpreterState.WaitingForPassword;
 					}
 					break;
@@ -117,6 +117,7 @@ namespace TestClient
 					player.OnNotifyPlayer+=(c,s)=>Connection.SendString(s+"\r\n");
 					player.OnNewRoomates+=new Action<PlayerCharacter>(NewRoomates);
 					dungeon.AddCharacter(player,dungeon.StartingRoom);
+					Logger.Log(string.Format("{0} {1} : {2}",DateTime.Now,user,Connection.ConnectionSocket.RemoteEndPoint.ToString()));
 					status=InterpreterState.Standard;
 					break;
 			}
@@ -139,6 +140,7 @@ namespace TestClient
 		{
 			if(player!=null){
 				player.Room.RemoveCharacter(player);
+				player.Room.NotifyPlayers("{0} disconnected",player.Name);
 			}
 		}
 	}

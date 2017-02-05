@@ -40,7 +40,13 @@ namespace TestClient
 			byte[] buffer=Encoding.UTF8.GetBytes(output);
 			lock(lockObject)
 			{
-				ConnectionSocket.Send(buffer);
+				try
+				{
+					ConnectionSocket.Send(buffer);
+				}catch(SocketException){
+					ConnectionSocket.Close();
+					Interpreter.Shutdown();
+				}
 			}
 		}
 		
@@ -50,12 +56,19 @@ namespace TestClient
 			byte[] buffer=new byte[10];
 			
 			
-			int received;
+			int received=0;
 			StreamReader reader=new StreamReader(stream);
 
 			while(ConnectionSocket.Poll(0,SelectMode.SelectRead))
 			{
-				received=ConnectionSocket.Receive(buffer,buffer.Length,SocketFlags.None);
+				try
+				{
+					received=ConnectionSocket.Receive(buffer,buffer.Length,SocketFlags.None);
+				}catch(SocketException){
+					ConnectionSocket.Close();
+					Interpreter.Shutdown();
+					break;
+				}
 				if(received==0)
 				{
 					ConnectionSocket.Close();
@@ -128,7 +141,13 @@ namespace TestClient
 				case 246://AYT(ARE YOU THERE(PING)
 					lock(lockObject)
 					{
-						ConnectionSocket.Send(new byte[]{255,246});
+						try
+						{
+							ConnectionSocket.Send(new byte[]{255,246});
+						}catch(SocketException){
+							ConnectionSocket.Close();
+							Interpreter.Shutdown();
+						}
 						status=TelnetStatus.standard;
 					}
 					break;
