@@ -212,7 +212,7 @@ namespace Mud.Characters
 		{
 			string name="";
 			name+=Name;
-			string output=string.Format("[~{0} L:{1} HP:({2}/{3}) Pow:{4} Armor{5}]",name,Level,HitPoints,MaxHitPoints,Power,Armor);
+			string output=string.Format("[~{0} L:{1} HP:({2}/{3}) Pow:{4} Armor:{5}]",name,Level,HitPoints,MaxHitPoints,Power,Armor);
 			return output;
 		}
 	}
