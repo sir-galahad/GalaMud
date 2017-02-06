@@ -50,7 +50,7 @@ namespace Mud
 		
 		public void NotifyPlayers(string msg,params string[] arguments)
 		{
-			foreach(PlayerCharacter c in PlayersInRoom){
+			foreach(PlayerCharacter c in GetPlayersInRoom()){
 			
 				c.NotifyPlayer(msg,arguments);
 				

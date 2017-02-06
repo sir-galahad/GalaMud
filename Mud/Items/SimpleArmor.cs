@@ -19,8 +19,10 @@ namespace Mud.Items
 		
 		public SimpleArmor(string name, string desc,int armor):base(name,desc)
 		{
+			
 			Armor=armor;
 			MaxCount=1;
+			Description=string.Format("{0} (+{1} Armor)",Description,Armor);
 		}
 		public override int GetArmor(PlayerCharacter player)
 		{

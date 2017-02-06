@@ -81,8 +81,8 @@ namespace Mud.Actions
 			}
 			NewRoom=Character.Dungeon.GetRoom(x,y);
 			if(NewRoom==null) return String.Format("{0} ran into the wall",Character.Name);
-			room.RemoveCharacter(Character);
 			room.NotifyPlayers(Character.Name+" has left the room heading " + MoveAction.DirectionString[(int)direction]);
+			room.RemoveCharacter(Character);
 			NewRoom.AddCharacter(Character);
 			return "";
 		

@@ -65,7 +65,7 @@ namespace Mud.Items
 			}catch(KeyNotFoundException){}
 		}
 		
-		public MudItem PullItemByName(string name)
+		public MudItem PullItemByName(string name)//note this removes the item from inventory
 		{
 			MudItem item=null;
 			try{
@@ -73,7 +73,14 @@ namespace Mud.Items
 			}catch(KeyNotFoundException){}
 			return item;
 		}
-		
+		public MudItem PeekItemByName(string name)
+		{
+			MudItem item =null;
+			try{
+				item=Items[name].Peek();
+			}catch(KeyNotFoundException){}
+			return item;
+		}
 		public bool HasItem(string name)
 		{
 			bool result=false;

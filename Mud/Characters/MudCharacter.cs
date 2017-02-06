@@ -58,10 +58,9 @@ namespace Mud.Characters
 			if(HitPoints<0)HitPoints=0;
 			return damage;	
 		}
-		public string StatusString()
+		public virtual string StatusString()
 		{
 			string name="";
-			if(this is PlayerCharacter)name="~";
 			name+=Name;
 			string output=string.Format("[{0} L:{1} HP:({2}/{3})]",name,Level,HitPoints,MaxHitPoints);
 			return output;

@@ -160,29 +160,19 @@ namespace Mud.Characters
 		{
 			bool result=false;
 			MudItem tmp;
-			MudItem item=inventory.PullItemByName(itemname);
+			MudItem item=inventory.PeekItemByName(itemname);
 			if(item==null)
 			{
-				inventory.AddItem(item);
+				//inventory.AddItem(item);
 				return result;
 			}
 			if(item is WeaponItem)
 			{
-				tmp=EquipedWeapon as WeaponItem;
-				if(tmp!=null)
-				{
-					inventory.AddItem(tmp);
-				}
 				EquipedWeapon=(item as WeaponItem);
 				result=true;
 			}
 			if(item is ArmorItem)
 			{
-				tmp=EquipedArmor;
-				if(tmp!=null)
-				{
-					inventory.AddItem(tmp);
-				}
 				EquipedArmor=(item as ArmorItem);
 				result=true;
 			}
@@ -211,6 +201,19 @@ namespace Mud.Characters
 			{
 				OnNewRoomates(this);
 			}
+		}
+		
+		public MudItem GetInventoryItem(string itemName)
+		{
+			return inventory.PeekItemByName(itemName);
+		}
+		
+		public override string StatusString()
+		{
+			string name="";
+			name+=Name;
+			string output=string.Format("[~{0} L:{1} HP:({2}/{3}) Pow:{4} Armor{5}]",name,Level,HitPoints,MaxHitPoints,Power,Armor);
+			return output;
 		}
 	}
 }

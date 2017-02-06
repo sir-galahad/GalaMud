@@ -43,7 +43,7 @@ namespace Mud.Actions
 		public override string DoAction()
 		{
 			if((Character as PlayerCharacter).Equip(ItemName))
-				return string.Format("\t*{0} equipped",ItemName);
+				return string.Format("\t*{0} equipped {1}",Character.Name,ItemName);
 			return "couldn't equip item";
 		}
 	}

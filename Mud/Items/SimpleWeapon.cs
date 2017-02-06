@@ -15,16 +15,18 @@ namespace Mud.Items
 	/// </summary>
 	public class SimpleWeapon:WeaponItem
 	{
-		int Damage;
-		public SimpleWeapon(string name, string desc, int dmg):base(name,desc)
+		int Power;
+		public SimpleWeapon(string name, string desc, int power):base(name,desc)
 		{
-			Damage=dmg;
+			
+			Power=power;
 			MaxCount=1;
+			Description=string.Format("{0} (+{1} Power)",Description,Power);
 		}
 		
 		public override int GetDamage(PlayerCharacter player)
 		{
-			return Damage;
+			return Power;
 		}
 	}
 }

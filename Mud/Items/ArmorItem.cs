@@ -18,6 +18,7 @@ namespace Mud.Items
 		public ArmorItem(string name,string desc):base(name,desc)
 		{
 		}
+	
 		public virtual int GetArmor(PlayerCharacter player)
 		{
 			return 0;

@@ -10,7 +10,9 @@ using System;
 using Mud.Characters;
 using Mud.Actions;
 using Mud;
+using Mud.Items;
 using System.Text;
+using System.Collections.Generic;
 namespace TestClient
 {
 	/// <summary>
@@ -23,6 +25,7 @@ namespace TestClient
 		MudConnection Connection;
 		PlayerCharacter player=null;
 		Dungeon dungeon;
+		Dictionary<string,Action<string>> Commands=new Dictionary<string, Action<string>>();
 		string user=null;
 		string pass=null;
 		public MudInterpreter(MudConnection con,Dungeon dungeon)
@@ -30,6 +33,10 @@ namespace TestClient
 			this.dungeon=dungeon;
 			Connection=con;
 			con.SendString("user name: ");
+			Commands.Add("help",new Action<string>(HelpCommand));
+			Commands.Add("status",new Action<string>(StatusCommand));
+			Commands.Add("inventory",new Action<string>(InventoryCommand));
+			Commands.Add("examine",new Action<string>(ExamineCommand));
 		}
 		
 		public void HandleInput(string input)
@@ -42,14 +49,14 @@ namespace TestClient
 			}
 			
 			string[] inputArgs=input.Split(' ');
-				
+			string command=inputArgs[0].ToLower();
+			string commandargs=input.Substring(command.Length).Trim();;
 			if(inputArgs.Length>=1)
 			{
-				string action=inputArgs[0].ToLower();
-				string arg=input.Remove(0,action.Length);
+				string arg=input.Remove(0,command.Length);
 				try
 				{
-					ActionBuilder builder=player.GetAction(action);
+					ActionBuilder builder=player.GetAction(command);
 					ActionArgs a=ActionArgs.GetActionArgs(player,arg);
 				
 					if(builder!=null && a!=null)
@@ -70,29 +77,13 @@ namespace TestClient
 					player.NotifyPlayer(ex.Message);
 				}
 			}
-			if(inputArgs[0].ToLower()=="help")
+			if(Commands.ContainsKey(command))
 			{
-				string message="Available Actions:\n ";
-				foreach(string s in player.GetActionList())
-				{
-					message=string.Format("{0} {1}",message,s);
-				}
-				player.NotifyPlayer(message);
-					
-			}
-			if(inputArgs[0].ToLower()=="inventory")
-			{
-				foreach(string s in player.GetInventory())
-				{
-					player.NotifyPlayer(s);
-				}
-			}
-			if(inputArgs[0].ToLower()=="status")
-			{
-				player.NotifyPlayer(player.StatusString());
+				Commands[command](commandargs);
 			}
 			
 		}
+		
 		void Initialize(string input)
 		{
 			switch(status)
@@ -143,6 +134,72 @@ namespace TestClient
 				player.Room.NotifyPlayers("{0} disconnected",player.Name);
 				player.Room.RemoveCharacter(player);
 			}
+		}
+		
+		void HelpCommand(string args)
+		{
+			string message="Available Actions:\n\t ";
+			foreach(string s in player.GetActionList())
+			{
+				message=string.Format("{0} {1}",message,s);
+			}
+			
+			message+="\nAvailable commands:\n\t";
+			foreach(string s in Commands.Keys)
+			{
+				message=string.Format("{0} {1}",message,s);
+			}
+			player.NotifyPlayer(message);
+					
+		}
+		
+		void InventoryCommand(string args)
+		{
+			string message="Inventory:\n";
+			string[] inventory=player.GetInventory().ToArray();
+			if(inventory.Length==0)
+			{
+				message+="<empty>";
+				player.NotifyPlayer(message);
+				return;
+			}
+			foreach(string s in inventory)
+			{
+				message=string.Format("{0}   {1}",message,s);
+			}
+			player.NotifyPlayer(message);
+		}
+		void StatusCommand(string args)
+		{
+			string message=player.StatusString();
+			string weapon="No weapon";
+			if(player.EquipedWeapon!=null)
+			{
+				weapon=player.EquipedWeapon.Name;
+			}
+			message+=string.Format("\nWeapon: {0}\n",weapon);
+			string armor="No armor";
+			if(player.EquipedArmor!=null)
+			{
+				armor=player.EquipedArmor.Name;
+			}
+			message+=string.Format("Armor: {0}\n",armor);
+			player.NotifyPlayer(message);
+		}
+		
+		void ExamineCommand(string args)
+		{
+			string[] words=args.Split(' ');
+			string itemName=args.Split(' ')[0].ToLower();
+			MudItem item;
+			item=player.GetInventoryItem(itemName);
+			if(item==null)
+			{
+				player.NotifyPlayer("You can't examine an item you don't have");
+			}
+			string message=string.Format("Examining {0}: ",item.Name);
+			message+=item.Description;
+			player.NotifyPlayer(message);
 		}
 	}
 	
