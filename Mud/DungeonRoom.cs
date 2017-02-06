@@ -145,6 +145,7 @@ namespace Mud
 				if(PlayersInRoom.Count==0){
 					NonPlayersInRoom.Clear();
 				}
+				
 				foreach(PlayerCharacter p in PlayersInRoom)
 				{
 					p.NewRoomates();
@@ -162,6 +163,7 @@ namespace Mud
 		{
 			return NonPlayersInRoom.ToArray();
 		}
+		
 		void ExecuteQueue()
 		{	
 			try{
@@ -250,31 +252,16 @@ namespace Mud
 						//test for death
 						//funky loops because the lists we're iterating might be changed
 						
-						while(x<PlayersInRoom.Count)
+						foreach(MudCharacter c in GetCharactersInRoom())
 						{
-							PlayerCharacter c=PlayersInRoom[x];
 							if(c.HitPoints<=0)
 							{
 								NotifyPlayers("\t{0} has died.",c.StatusString());
-								this.RemoveCharacter(c);
 								c.OnDeath();
-								continue;
+								RemoveCharacter(c);
  							}
-							x++;
 						}
-						x=0;
-						while(x<NonPlayersInRoom.Count)
-						{
-							MudCharacter c=NonPlayersInRoom[x];
-							if(c.HitPoints<=0)
-							{
-								NotifyPlayers("\t{0} has died",c.StatusString());
-								NonPlayersInRoom.Remove(c);
-								c.OnDeath();
-								continue;
-							}
-							x++;
-						}
+						
 					}
 					Status=GenerateStatus();
 				}	
