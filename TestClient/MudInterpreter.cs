@@ -92,6 +92,10 @@ namespace TestClient
 		
 		void Initialize(string input)
 		{
+			if(input.Length==0)
+			{
+				return;
+			}
 			switch(status)
 			{
 				case InterpreterState.NeworContinue:

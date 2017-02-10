@@ -46,7 +46,7 @@ namespace TestClient
 			{
 				List<Socket> readList=new List<Socket>();
 				readList.AddRange(Sockets.Keys);
-				Socket.Select(readList,null,null,400);
+				Socket.Select(readList,null,null,10000);
 				
 				foreach(Socket s in readList)
 				{
