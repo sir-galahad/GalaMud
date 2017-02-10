@@ -48,6 +48,7 @@ namespace Mud.Items
 		
 		public int GetCountItem(string item)
 		{
+			item=item.ToLower();
 			int itemCount=0;
 			try{
 				itemCount=Items[item].Count;

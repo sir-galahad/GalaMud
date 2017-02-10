@@ -22,5 +22,12 @@ namespace Mud.Characters
 			AddActionToList(EquipAction.GetActionBuilder());
 			AddActionToList(BonkAction.GetActionBuilder());
 		}
+		public PlayerWarrior(string name,int level,int experience):base(name,level,experience)
+		{
+			AddActionToList(MoveAction.GetActionBuilder());
+			AddActionToList(AttackAction.GetActionBuilder());
+			AddActionToList(EquipAction.GetActionBuilder());
+			AddActionToList(BonkAction.GetActionBuilder());
+		}
 	}
 }

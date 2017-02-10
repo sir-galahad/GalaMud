@@ -20,23 +20,29 @@ namespace TestClient
 	/// </summary>
 	public class MudInterpreter
 	{
-		enum InterpreterState{WaitingForUser,WaitingForPassword,Standard};
+		enum InterpreterState{NeworContinue,WaitingForUser,WaitingForPassword,Standard};
 		InterpreterState status=InterpreterState.WaitingForUser;
 		MudConnection Connection;
 		PlayerCharacter player=null;
 		Dungeon dungeon;
+		
+		bool Continue;
 		Dictionary<string,Action<string>> Commands=new Dictionary<string, Action<string>>();
 		string user=null;
 		string pass=null;
+		string salt=null;
+		MySqlSimplifier database=MySqlSimplifier.GetInstance();
 		public MudInterpreter(MudConnection con,Dungeon dungeon)
 		{
 			this.dungeon=dungeon;
 			Connection=con;
-			con.SendString("user name: ");
+			status=InterpreterState.NeworContinue;
+			con.SendString("Create a new character or continue (N/C): ");
 			Commands.Add("help",new Action<string>(HelpCommand));
 			Commands.Add("status",new Action<string>(StatusCommand));
 			Commands.Add("inventory",new Action<string>(InventoryCommand));
 			Commands.Add("examine",new Action<string>(ExamineCommand));
+			salt=GenerateSalt();
 		}
 		
 		public void HandleInput(string input)
@@ -88,27 +94,94 @@ namespace TestClient
 		{
 			switch(status)
 			{
-				case InterpreterState.WaitingForUser:
-					if(input.Split(' ').Length>1)
+				case InterpreterState.NeworContinue:
+					if(input.ToLower()[0]!='n'&&input.ToLower()[0]!='c')
 					{
-						Connection.SendString("Bad user name");
-						
+						Connection.SendString("Create a new character or continue (N/C): ");
+						return;
+					}
+					Continue=false;
+					
+					if(input.ToLower()[0]=='c')
+					{
+						Continue=true;
+					}
+					
+					Connection.SendString("username: ");
+					status=InterpreterState.WaitingForUser;
+					break;
+					
+				case InterpreterState.WaitingForUser:
+					bool exists=database.PlayerExists(input);
+					if(exists && !Continue)
+					{
+						Connection.SendString("user already exists\nusername: ");
+						return;
+					}
+					string result=ValidatePlayerName(input);
+					if(result!=null){
+						Connection.SendString(result+"\n");
+						Connection.SendString("username: ");
 					}else{
 						user=input;
 						Connection.SendString("password: ");
+						if(Continue&&exists){
+							salt=database.GetPlayerSalt(user);
+						}
 						status=InterpreterState.WaitingForPassword;
 					}
+					
 					break;
+					
 				case InterpreterState.WaitingForPassword:
 					System.Security.Cryptography.HashAlgorithm Hash=System.Security.Cryptography.SHA512.Create();
-					byte[] hash=Hash.ComputeHash(Encoding.UTF8.GetBytes(input));
+					byte[] hash=Hash.ComputeHash(Encoding.UTF8.GetBytes(salt+input));
 					string hashString=Convert.ToBase64String(hash);
-					pass=hashString;
-					player=new PlayerWarrior(user);
+					if(pass==null)
+					{
+						pass=hashString;
+						if(!Continue)
+						{
+							Connection.SendString("re-enter password: ");
+							return;
+						}
+					}else if(hashString!=pass && !Continue)
+					{
+						Connection.SendString("passwords do not match\npassword: ");
+						return;
+					}
+					
+					if(!Continue &&hashString==pass)
+					{
+						Console.WriteLine("{0} ({1})",pass,pass.Length);
+						player=new PlayerWarrior(user);
+						database.StorePlayer(player);
+						database.StoreUserandPass(user,salt,pass);
+					
+					}
+					if(Continue)
+					{
+						string storedpass=database.GetPlayerPassword(user);
+						if(storedpass!=pass)
+						{
+							Connection.SendString("bad username or password\nCreate a new character or continue (N/C): ");
+							status=InterpreterState.NeworContinue;
+							user=null;
+							pass=null;
+							return;
+						}
+						player=database.GetPlayer(user);
+						status=InterpreterState.Standard;
+					}
+					
 					player.OnNotifyPlayer+=(c,s)=>Connection.SendString(s+"\r\n");
 					player.OnNewRoomates+=new Action<PlayerCharacter>(NewRoomates);
 					dungeon.AddCharacter(player,dungeon.StartingRoom);
 					Logger.Log(string.Format("{0} {1} : {2}",DateTime.Now,user,Connection.ConnectionSocket.RemoteEndPoint.ToString()));
+					status=InterpreterState.Standard;
+					player.ItemEquiped+=(c,i)=>{database.StorePlayer(player);};
+					player.ExperienceGained+=(c,e)=>{database.StorePlayer(player);};
+					player.InventoryChange+=(c,i)=>{database.ChangeItemCount(player.Name,i.Name,player.GetItemCount(i.Name));};
 					status=InterpreterState.Standard;
 					break;
 			}
@@ -201,6 +274,29 @@ namespace TestClient
 			message+=item.Description;
 			player.NotifyPlayer(message);
 		}
+		
+		public string ValidatePlayerName(string name)
+		{
+			if(name.Length>20) return "too many characters used";
+			if(name.Length<3) return "names must use at least 3 characters";
+			foreach(char c in name)
+			{
+				if(!Char.IsLetterOrDigit(c))
+				{
+					return "names can only include letters and numbers";
+				}
+			}
+			return null;
+		}
+		
+		public string GenerateSalt()
+		{
+			Random rand=new Random();
+			byte[] buffer=new byte[4];
+			rand.NextBytes(buffer);
+			return Convert.ToBase64String(buffer);				
+		}
+		
 	}
 	
 }

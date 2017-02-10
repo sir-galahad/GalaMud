@@ -34,6 +34,7 @@
     <Reference Include="Microsoft.CSharp">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="MySql.Data" />
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -51,6 +52,7 @@
     <Compile Include="Logger.cs" />
     <Compile Include="MudInterpreter.cs" />
     <Compile Include="MudConnection.cs" />
+    <Compile Include="MySqlSimplifier.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MudServer.cs" />

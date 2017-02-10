@@ -248,7 +248,6 @@ namespace Mud
 						
 						string msg=action.DoAction();
 						NotifyPlayers(msg);
-						int x=0;
 						//test for death
 						//funky loops because the lists we're iterating might be changed
 						

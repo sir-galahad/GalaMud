@@ -20,15 +20,18 @@ namespace Mud.Characters
 	{
 		public event Action<PlayerCharacter> OnTurnStart;
 		public event Action<PlayerCharacter> OnNewRoomates;
+		public event Action<PlayerCharacter,MudItem> InventoryChange;
+		public event Action<PlayerCharacter,string> ItemEquiped;
+		public event Action<PlayerCharacter,int> ExperienceGained;
 		Inventory inventory=new Inventory();
-		int Experience=0;
+		public int Experience{get;private set;}
 		public MudCharacter[] Roomates{get;private set;}
 		public WeaponItem EquipedWeapon{get;protected set;}
 		public ArmorItem EquipedArmor{get;protected set;}
 		public override int Power {
 			get {
-			if(EquipedWeapon==null)return 1;
-			return EquipedWeapon.GetDamage(this);
+				if(EquipedWeapon==null)return 1;
+				return EquipedWeapon.GetDamage(this);
 			}
 			protected set {
 				base.Power = value;
@@ -60,11 +63,25 @@ namespace Mud.Characters
 		
 		public PlayerCharacter(string Name):base(Name)
 		{
+			Experience=0;
 			EquipedWeapon=null;
 			EquipedArmor=null;
 			this.HitPoints=MaxHitPoints;
 		}
 		
+		public PlayerCharacter(string name,int level,int experience):base(name)
+		{
+			EquipedWeapon=null;
+			EquipedArmor=null;
+			Level=level;
+			Experience=experience;
+			this.HitPoints=MaxHitPoints;
+		}
+		
+		public void SetInventory(Inventory inventory)
+		{
+			this.inventory=inventory;
+		}
 		
 		public void NotifyPlayer(string msg, params object[] args)
 		{
@@ -111,6 +128,10 @@ namespace Mud.Characters
 			{
 				LevelUp();
 			}
+			if(ExperienceGained!=null)
+			{
+				ExperienceGained(this,Experience);
+			}
 		}
 		
 		void LevelUp()
@@ -150,6 +171,10 @@ namespace Mud.Characters
 			}
 			if(inventory.AddItem(a))
 				NotifyPlayer("\t*You looted {0}",a.Name);
+			if(InventoryChange!=null)
+			{
+				InventoryChange(this,a);
+			}
 		}
 		
 		public bool InventoryHasItem(string itemName)
@@ -157,10 +182,17 @@ namespace Mud.Characters
 			return inventory.HasItem(itemName);
 		}
 		
+		public int GetItemCount(string itemName)
+		{
+			itemName=itemName.ToLower();
+			if(!inventory.HasItem(itemName))return 0;
+			return inventory.GetCountItem(itemName);
+		}
+		
 		public bool Equip(string itemname)
 		{
+			itemname=itemname.ToLower();
 			bool result=false;
-			MudItem tmp;
 			MudItem item=inventory.PeekItemByName(itemname);
 			if(item==null)
 			{
@@ -176,6 +208,10 @@ namespace Mud.Characters
 			{
 				EquipedArmor=(item as ArmorItem);
 				result=true;
+			}
+			if(result==true && ItemEquiped!=null)
+			{
+				ItemEquiped(this,itemname);
 			}
 			return result;
 		}

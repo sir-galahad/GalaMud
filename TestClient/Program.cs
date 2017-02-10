@@ -31,6 +31,10 @@ namespace TestClient
 			d.SetRoom(new DungeonPosition(0,1),new HealingRoom(d,new DungeonPosition(0,1)));
 			d.SetRoom(new DungeonPosition(2,2),new HealingRoom(d,new DungeonPosition(2,2)));
 			MudServer server=new MudServer(d);
+			Console.WriteLine("password for mud database");
+			string pass=Console.ReadLine().Trim();
+			MySqlSimplifier.Setparams("localhost","mud",pass);
+			MySqlSimplifier.GetInstance().CreateDataBase();
 			server.Start();
 			//prog.RunGame();
 		}
