@@ -54,6 +54,7 @@
     <Compile Include="Actions\MoveAction.cs" />
     <Compile Include="Actions\NullAction.cs" />
     <Compile Include="Actions\TargetedAction.cs" />
+    <Compile Include="Actions\UseAction.cs" />
     <Compile Include="Characters\MudCharacter.cs" />
     <Compile Include="Characters\NpcCharacters\BasicMob.cs" />
     <Compile Include="Characters\NpcCharacters\NpcCharacter.cs" />
@@ -66,7 +67,9 @@
     <Compile Include="Effects\StunEffect.cs" />
     <Compile Include="HealingRoom.cs" />
     <Compile Include="Items\ArmorItem.cs" />
+    <Compile Include="Items\HealingPotion.cs" />
     <Compile Include="Items\Inventory.cs" />
+    <Compile Include="Items\IUseable.cs" />
     <Compile Include="Items\LootTableElement.cs" />
     <Compile Include="Items\ItemBuilderFactory.cs" />
     <Compile Include="Items\MudItem.cs" />

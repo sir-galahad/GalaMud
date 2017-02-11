@@ -24,6 +24,7 @@ namespace Mud.Characters.NpcCharacters
 			ItemBuilderFactory factory=ItemBuilderFactory.GetInstance();
 			LootTable.Add(new LootTableElement(999,factory.GetBuilder("rusty-spoon")));
 			LootTable.Add(new LootTableElement(999,factory.GetBuilder("loincloth")));
+			LootTable.Add(new LootTableElement(100,factory.GetBuilder("healing-potion")));
 		}
 		
 		public override void StartTurn()

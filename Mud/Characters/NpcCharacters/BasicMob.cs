@@ -27,9 +27,11 @@ namespace Mud.Characters.NpcCharacters
 			HitPoints=MaxHitPoints;
 			ItemBuilderFactory factory=ItemBuilderFactory.GetInstance();
 			ActionList.Add("attack",AttackAction.GetActionBuilder());
+			LootTable.Add(new LootTableElement(100,factory.GetBuilder("healing-potion")));
 			if(level==2)
 			{
-				LootTable.Add(new Mud.Items.LootTableElement(500,factory.GetBuilder("rusty-dagger")));            
+				LootTable.Add(new Mud.Items.LootTableElement(500,factory.GetBuilder("rusty-dagger")));
+								
 			}
 			if(level==3)
 			{

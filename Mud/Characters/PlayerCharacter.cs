@@ -240,9 +240,14 @@ namespace Mud.Characters
 			}
 		}
 		
-		public MudItem GetInventoryItem(string itemName)
+		public MudItem PeekInventoryItem(string itemName)
 		{
 			return inventory.PeekItemByName(itemName);
+		}
+		
+		public MudItem PullInventoryItem(string itemName)
+		{
+			return inventory.PullItemByName(itemName);
 		}
 		
 		public override string StatusString()

@@ -269,7 +269,7 @@ namespace TestClient
 			string[] words=args.Split(' ');
 			string itemName=args.Split(' ')[0].ToLower();
 			MudItem item;
-			item=player.GetInventoryItem(itemName);
+			item=player.PeekInventoryItem(itemName);
 			if(item==null)
 			{
 				player.NotifyPlayer("You can't examine an item you don't have");
