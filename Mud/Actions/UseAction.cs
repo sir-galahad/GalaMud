@@ -54,7 +54,7 @@ namespace Mud.Actions
 			
 			string itemName=m.Groups[1].ToString().ToLower();
 			if(!(sender as PlayerCharacter).InventoryHasItem(itemName)){
-				(sender as PlayerCharacter).NotifyPlayer("Can not equip an item you don't have");
+				(sender as PlayerCharacter).NotifyPlayer("Can not use an item you don't have");
 				return null;
 			}
 			MudCharacter target=null;

@@ -246,7 +246,7 @@ namespace TestClient
 			}
 			foreach(string s in inventory)
 			{
-				message=string.Format("{0}   {1}",message,s);
+				message=string.Format("{0}   {1} x{2}\n",message,s,player.GetItemCount(s));
 			}
 			player.NotifyPlayer(message);
 		}
@@ -277,6 +277,7 @@ namespace TestClient
 			if(item==null)
 			{
 				player.NotifyPlayer("You can't examine an item you don't have");
+				return;
 			}
 			string message=string.Format("Examining {0}: ",item.Name);
 			message+=item.Description;

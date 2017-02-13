@@ -78,6 +78,10 @@ namespace Mud.Items
 		{
 			MudItem item =null;
 			try{
+				if(Items[name].Count==0)
+				{
+					return null;
+				}
 				item=Items[name].Peek();
 			}catch(KeyNotFoundException){}
 			return item;

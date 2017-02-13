@@ -247,7 +247,10 @@ namespace Mud.Characters
 		
 		public MudItem PullInventoryItem(string itemName)
 		{
-			return inventory.PullItemByName(itemName);
+			MudItem item=inventory.PullItemByName(itemName);
+			if(item==null)return null;
+			InventoryChange(this,item);
+			return item;
 		}
 		
 		public override string StatusString()
