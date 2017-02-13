@@ -53,17 +53,21 @@ namespace TestClient
 				Initialize(input);
 				return;
 			}
-			
+			input=input.ToLower();
 			string[] inputArgs=input.Split(' ');
 			string command=inputArgs[0].ToLower();
 			string commandargs=input.Substring(command.Length).Trim();;
 			if(inputArgs.Length>=1)
 			{
+				ActionArgs a=null;
 				string arg=input.Remove(0,command.Length);
 				try
 				{
 					ActionBuilder builder=player.GetAction(command);
-					ActionArgs a=ActionArgs.GetActionArgs(player,arg);
+					if(builder!=null)
+					{
+						a=builder.TranslateArgs(player,input);
+					}
 				
 					if(builder!=null && a!=null)
 					{

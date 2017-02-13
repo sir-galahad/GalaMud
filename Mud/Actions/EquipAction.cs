@@ -8,6 +8,8 @@
  */
 using System;
 using Mud.Characters;
+using Mud.Items;
+using System.Text.RegularExpressions;
 namespace Mud.Actions
 {
 	/// <summary>
@@ -30,7 +32,26 @@ namespace Mud.Actions
 			                         	}
 			                  
 			                         	return null;
-			                         },true);
+			                         },
+			                         new Func<MudCharacter, string, ActionArgs>(GetArgs),
+			                         true);
+		}
+		
+		public static ActionArgs GetArgs(MudCharacter sender,string input)
+		{
+			
+			Regex regex=new Regex("^equip (\\S+)$",RegexOptions.IgnoreCase);
+			Match m=regex.Match(input);
+			if(!m.Success){
+				(sender as PlayerCharacter).NotifyPlayer("i don't quite understand");
+				return null;
+			}
+			string itemName=m.Groups[1].ToString().ToLower();
+			if(!(sender as PlayerCharacter).InventoryHasItem(itemName)){
+				(sender as PlayerCharacter).NotifyPlayer("Can not equip an item you don't have");
+				return null;
+			}
+			return new ActionArgs(sender,null,itemName);
 		}
 		
 		string ItemName;

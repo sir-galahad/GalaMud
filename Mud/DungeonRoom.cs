@@ -107,7 +107,7 @@ namespace Mud
 					//(p!=character)
 					{
 						p.NotifyPlayer("{0} has entered the room",character.StatusString());
-						p.NewRoomates();
+						//p.NewRoomates();
 					}
 				}
 				
@@ -148,7 +148,7 @@ namespace Mud
 				
 				foreach(PlayerCharacter p in PlayersInRoom)
 				{
-					p.NewRoomates();
+					//p.NewRoomates();
 				}
 
 			}

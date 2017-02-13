@@ -7,7 +7,7 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
-
+using Mud.Characters;
 namespace Mud.Actions
 {
 	/// <summary>
@@ -17,13 +17,17 @@ namespace Mud.Actions
 	{
 		public readonly string Name;
 		public readonly Func<ActionArgs,CharacterAction> BuildAction;
+		public readonly Func<MudCharacter,string,ActionArgs>TranslateArgs;
 		public readonly Boolean IsBeneficial;
-		public ActionBuilder(string name,Func<ActionArgs,CharacterAction>builder,bool beneficial)
+		public ActionBuilder(string name,Func<ActionArgs,CharacterAction>builder,Func<MudCharacter,string,ActionArgs>translator,bool beneficial)
 		{
 			Name=name.ToLower();
 			BuildAction=builder;
 			IsBeneficial=beneficial;
+			TranslateArgs=translator;
 		}
+		
+		
 		
 	}
 }

@@ -8,6 +8,7 @@
  */
 using System;
 using Mud.Characters;
+using System.Text.RegularExpressions;
 namespace Mud.Actions
 {
 	/// <summary>
@@ -20,8 +21,20 @@ namespace Mud.Actions
 		{
 			return new ActionBuilder("wait",
 			                         O=>{return new NullAction(O.Sender,"waits a turn");},
+			                         new Func<MudCharacter, string, ActionArgs>(GetArgs),
 			                         true);
 			                         
+		}
+		public static ActionArgs GetArgs(MudCharacter sender,string input)
+		{
+			Regex regex=new Regex("^wait$",RegexOptions.IgnoreCase);
+			Match m=regex.Match(input);
+			if(!m.Success){
+				return null;
+			}
+			
+			return new ActionArgs(sender);
+			
 		}
 		public NullAction(MudCharacter c,string message):base(c)
 		{

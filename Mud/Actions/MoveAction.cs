@@ -8,6 +8,7 @@
  */
 using System;
 using Mud.Characters;
+using System.Text.RegularExpressions;
 namespace Mud.Actions
 {
 	/// <summary>
@@ -27,7 +28,18 @@ namespace Mud.Actions
 			                  	}
 			                  	if(validArg==false){throw new ArgumentException("move can only use one of the four cardinal directions");}
 			                  	return new MoveAction(o.Sender,o.Argument);
-			                  },true);
+			                         },new Func<MudCharacter,string, ActionArgs>(GetArgs),true);
+		}
+		public static ActionArgs GetArgs(MudCharacter sender,string input)
+		{
+			Regex reg=new Regex("^move (north|south|east|west)$",RegexOptions.IgnoreCase);
+			Match m=reg.Match(input);
+			if(!m.Success)
+			{
+				return null;
+			}
+			return new ActionArgs(sender,null,m.Groups[1].ToString().ToLower());
+			//m.Captures[0]
 		}
 		public static string[] DirectionString={"north","south","east","west"};
 		MapDirection direction;

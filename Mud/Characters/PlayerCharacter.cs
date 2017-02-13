@@ -97,7 +97,7 @@ namespace Mud.Characters
 				Roomates=tmp;
 				if(OnNewRoomates!=null)
 				{
-					//OnNewRoomates(this);
+					OnNewRoomates(this);
 				}
 			}
 			if(OnTurnStart!=null){OnTurnStart(this);}

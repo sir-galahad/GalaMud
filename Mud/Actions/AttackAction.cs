@@ -8,6 +8,7 @@
  */
 using System;
 using Mud.Characters;
+using System.Text.RegularExpressions;
 namespace Mud.Actions
 {
 	/// <summary>
@@ -20,7 +21,27 @@ namespace Mud.Actions
 		{
 			return new ActionBuilder("attack",
 			                         (o)=>{return new AttackAction(o.Sender,o.Target);},
+			                         new Func<MudCharacter, string, ActionArgs>(GetArgs),
 			                         false);
+		}
+		
+		public static ActionArgs GetArgs(MudCharacter sender,string input)
+		{
+			MudCharacter[] targets;
+			Regex regex=new Regex("^attack (\\d{1,2})$",RegexOptions.IgnoreCase);
+			Match m=regex.Match(input);
+			if(!m.Success){
+				(sender as PlayerCharacter).NotifyPlayer("attack what? (target enemies by number)");
+				return null;
+			}
+			int targetnum=int.Parse(m.Groups[1].ToString());
+			targets=sender.Room.GetCharactersInRoom();
+			if(targetnum>=targets.Length){
+				(sender as PlayerCharacter).NotifyPlayer("no character present associated with that number");
+				return null;
+			}
+			return new ActionArgs(sender,targets[targetnum]);
+			
 		}
 		public AttackAction(MudCharacter Character,MudCharacter target):base(Character,target)
 		{
