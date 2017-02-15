@@ -10,6 +10,7 @@ using System;
 using MySql;
 using MySql.Data.MySqlClient;
 using MySql.Data;
+using System.Data;
 using Mud.Characters;
 using Mud.Items;
 namespace TestClient
@@ -49,17 +50,15 @@ namespace TestClient
 		
 		public MySqlSimplifier(string hostname,string user,string password)
 		{
-			MySqlConnectionStringBuilder sb=new MySqlConnectionStringBuilder();
-			sb.Server=hostname;
-			sb.UserID=user;
-			sb.Password=password;
-			connection=new MySqlConnection(sb.ToString());
-			connection.Open();
+		
 		}
 		
 		MySqlDataReader Command(string command)
 		{
-		
+			if((connection.State==ConnectionState.Closed))
+			{
+				CreateDataBase();
+			}
 			MySqlCommand cmd= connection.CreateCommand();
 			cmd.CommandText=command;
 			cmd.CommandType=System.Data.CommandType.Text;
@@ -69,7 +68,12 @@ namespace TestClient
 		public void CreateDataBase()
 		{
 			lock(lockObject)
-			{
+			{MySqlConnectionStringBuilder sb=new MySqlConnectionStringBuilder();
+				sb.Server=Hostname;
+				sb.UserID=User;
+				sb.Password=Password;
+				connection=new MySqlConnection(sb.ToString());
+				connection.Open();
 				Command("CREATE DATABASE IF NOT EXISTS Mud;").Close();
 				Command("USE Mud;").Close();
 				Command("CREATE TABLE IF NOT EXISTS authentication (lowerName VARCHAR(20),salt VARCHAR(20),pass VARCHAR(88),PRIMARY KEY(lowerName));").Close();
