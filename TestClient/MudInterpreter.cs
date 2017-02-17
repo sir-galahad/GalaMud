@@ -23,17 +23,19 @@ namespace TestClient
 		enum InterpreterState{NeworContinue,WaitingForUser,WaitingForPassword,Standard};
 		InterpreterState status=InterpreterState.WaitingForUser;
 		MudConnection Connection;
-		PlayerCharacter player=null;
+		public PlayerCharacter Player{get;private set;}
 		Dungeon dungeon;
-		
+		MudServer Server;
 		bool Continue;
 		Dictionary<string,Action<string>> Commands=new Dictionary<string, Action<string>>();
 		string user=null;
 		string pass=null;
 		string salt=null;
 		MySqlSimplifier database=MySqlSimplifier.GetInstance();
-		public MudInterpreter(MudConnection con,Dungeon dungeon)
+		
+		public MudInterpreter(MudServer server,MudConnection con,Dungeon dungeon)
 		{
+			Server=server;
 			this.dungeon=dungeon;
 			Connection=con;
 			status=InterpreterState.NeworContinue;
@@ -63,10 +65,10 @@ namespace TestClient
 				string arg=input.Remove(0,command.Length);
 				try
 				{
-					ActionBuilder builder=player.GetAction(command);
+					ActionBuilder builder=Player.GetAction(command);
 					if(builder!=null)
 					{
-						a=builder.TranslateArgs(player,input);
+						a=builder.TranslateArgs(Player,input);
 					}
 				
 					if(builder!=null && a!=null)
@@ -76,15 +78,15 @@ namespace TestClient
 						{
 							if(act is TargetedAction && ((TargetedAction)act).Target==null)
 							{
-								player.NotifyPlayer("Targeted actions must have a valid target");
+								Player.NotifyPlayer("Targeted actions must have a valid target");
 								return;
 							}
-						player.Room.AddActionToQueue(builder.BuildAction(a));
+						Player.Room.AddActionToQueue(builder.BuildAction(a));
 						}
 						
 					}
 				}catch(ArgumentException ex){
-					player.NotifyPlayer(ex.Message);
+					Player.NotifyPlayer(ex.Message);
 				}
 			}
 			if(Commands.ContainsKey(command))
@@ -142,6 +144,7 @@ namespace TestClient
 					break;
 					
 				case InterpreterState.WaitingForPassword:
+					//System.Security.Cryptography.HashAlgorithm Hash=System.Security.Cryptography.RNGCryptoServiceProvider.Create();
 					System.Security.Cryptography.HashAlgorithm Hash=System.Security.Cryptography.SHA512.Create();
 					byte[] hash=Hash.ComputeHash(Encoding.UTF8.GetBytes(salt+input));
 					string hashString=Convert.ToBase64String(hash);
@@ -162,8 +165,8 @@ namespace TestClient
 					if(!Continue &&hashString==pass)
 					{
 						Console.WriteLine("{0} ({1})",pass,pass.Length);
-						player=new PlayerWarrior(user);
-						database.StorePlayer(player);
+						Player=new PlayerWarrior(user);
+						database.StorePlayer(Player);
 						database.StoreUserandPass(user,salt,pass);
 					
 					}
@@ -178,18 +181,25 @@ namespace TestClient
 							pass=null;
 							return;
 						}
-						player=database.GetPlayer(user);
+						if(AlreadyOnline(user))
+						{
+							Connection.SendString("Player already logged in\r\n");
+							Connection.ConnectionSocket.Close();
+							return;
+						}
+						Player=database.GetPlayer(user);
+						
 						status=InterpreterState.Standard;
 					}
 					
-					player.OnNotifyPlayer+=(c,s)=>Connection.SendString(s+"\r\n");
-					player.OnNewRoomates+=new Action<PlayerCharacter>(NewRoomates);
-					dungeon.AddCharacter(player,dungeon.StartingRoom);
+					Player.OnNotifyPlayer+=(c,s)=>Connection.SendString(s+"\r\n");
+					Player.OnNewRoomates+=new Action<PlayerCharacter>(NewRoomates);
+					dungeon.AddCharacter(Player,dungeon.StartingRoom);
 					Logger.Log(string.Format("{0} {1} : {2}",DateTime.Now,user,Connection.ConnectionSocket.RemoteEndPoint.ToString()));
 					status=InterpreterState.Standard;
-					player.ItemEquiped+=(c,i)=>{database.StorePlayer(player);};
-					player.ExperienceGained+=(c,e)=>{database.StorePlayer(player);};
-					player.InventoryChange+=(c,i)=>{database.ChangeItemCount(player.Name,i.Name,player.GetItemCount(i.Name));};
+					Player.ItemEquiped+=(c,i)=>{database.StorePlayer(Player);};
+					Player.ExperienceGained+=(c,e)=>{database.StorePlayer(Player);};
+					Player.InventoryChange+=(c,i)=>{database.ChangeItemCount(Player.Name,i.Name,Player.GetItemCount(i.Name));};
 					status=InterpreterState.Standard;
 					break;
 			}
@@ -199,28 +209,28 @@ namespace TestClient
 			
 		//	currentRoomates=player.Roomates;
 			string msg="In the room now |   ";
-			for(int x=0;x<player.Roomates.Length;x++)
+			for(int x=0;x<Player.Roomates.Length;x++)
 			{
-				msg+=string.Format("{0}:{1}  ",x,player.Roomates[x].StatusString());
+				msg+=string.Format("{0}:{1}  ",x,Player.Roomates[x].StatusString());
 			}
 			//if(player.Roomates.Length>1)
-			player.NotifyPlayer(msg);
+			Player.NotifyPlayer(msg);
 			
 		}
 		
 		public void Shutdown()
 		{
-			if(player!=null){
+			if(Player!=null){
 				
-				player.Room.NotifyPlayers("{0} disconnected",player.Name);
-				player.Room.RemoveCharacter(player);
+				Player.Room.NotifyPlayers("{0} disconnected",Player.Name);
+				Player.Room.RemoveCharacter(Player);
 			}
 		}
 		
 		void HelpCommand(string args)
 		{
 			string message="Available Actions:\n\t ";
-			foreach(string s in player.GetActionList())
+			foreach(string s in Player.GetActionList())
 			{
 				message=string.Format("{0} {1}",message,s);
 			}
@@ -230,42 +240,42 @@ namespace TestClient
 			{
 				message=string.Format("{0} {1}",message,s);
 			}
-			player.NotifyPlayer(message);
+			Player.NotifyPlayer(message);
 					
 		}
 		
 		void InventoryCommand(string args)
 		{
 			string message="Inventory:\n";
-			string[] inventory=player.GetInventory().ToArray();
+			string[] inventory=Player.GetInventory().ToArray();
 			if(inventory.Length==0)
 			{
 				message+="<empty>";
-				player.NotifyPlayer(message);
+				Player.NotifyPlayer(message);
 				return;
 			}
 			foreach(string s in inventory)
 			{
-				message=string.Format("{0}   {1} x{2}\n",message,s,player.GetItemCount(s));
+				message=string.Format("{0}   {1} x{2}\n",message,s,Player.GetItemCount(s));
 			}
-			player.NotifyPlayer(message);
+			Player.NotifyPlayer(message);
 		}
 		void StatusCommand(string args)
 		{
-			string message=player.StatusString();
+			string message=Player.StatusString();
 			string weapon="No weapon";
-			if(player.EquipedWeapon!=null)
+			if(Player.EquipedWeapon!=null)
 			{
-				weapon=player.EquipedWeapon.Name;
+				weapon=Player.EquipedWeapon.Name;
 			}
 			message+=string.Format("\nWeapon: {0}\n",weapon);
 			string armor="No armor";
-			if(player.EquipedArmor!=null)
+			if(Player.EquipedArmor!=null)
 			{
-				armor=player.EquipedArmor.Name;
+				armor=Player.EquipedArmor.Name;
 			}
 			message+=string.Format("Armor: {0}\n",armor);
-			player.NotifyPlayer(message);
+			Player.NotifyPlayer(message);
 		}
 		
 		void ExamineCommand(string args)
@@ -273,15 +283,15 @@ namespace TestClient
 			string[] words=args.Split(' ');
 			string itemName=args.Split(' ')[0].ToLower();
 			MudItem item;
-			item=player.PeekInventoryItem(itemName);
+			item=Player.PeekInventoryItem(itemName);
 			if(item==null)
 			{
-				player.NotifyPlayer("You can't examine an item you don't have");
+				Player.NotifyPlayer("You can't examine an item you don't have");
 				return;
 			}
 			string message=string.Format("Examining {0}: ",item.Name);
 			message+=item.Description;
-			player.NotifyPlayer(message);
+			Player.NotifyPlayer(message);
 		}
 		
 		public string ValidatePlayerName(string name)
@@ -304,6 +314,18 @@ namespace TestClient
 			byte[] buffer=new byte[4];
 			rand.NextBytes(buffer);
 			return Convert.ToBase64String(buffer);				
+		}
+		
+		public bool AlreadyOnline(string user)
+		{
+			foreach(string name in Server.Players)
+			{
+				if(name.ToLower()==user.ToLower())
+				{
+					return true;
+				}
+			}
+			return false;
 		}
 		
 	}

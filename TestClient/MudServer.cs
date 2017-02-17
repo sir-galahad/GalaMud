@@ -8,6 +8,7 @@
  */
 using System;
 using Mud;
+using Mud.Characters;
 using System.Net.Sockets;
 using System.Net;
 using System.Collections.Generic;
@@ -29,7 +30,21 @@ namespace TestClient
 			MudDungeon=dungeon;
 		
 		}
-		
+		public string[] Players{
+			
+			get
+			{
+				List<string> names=new List<string>();
+				foreach(MudConnection c in Sockets.Values)
+				{
+					if(c!=null && c.PlayerName!=null)
+					{
+						names.Add(c.PlayerName);
+					}
+				}
+				return names.ToArray();
+			}
+		}
 		public void Start()
 		{
 			
@@ -75,7 +90,7 @@ namespace TestClient
 		void NewConnection()
 		{
 			Socket s=Listener.Accept();
-			Sockets.Add(s,new MudConnection(s,MudDungeon));
+			Sockets.Add(s,new MudConnection(this,s,MudDungeon));
 			
 		}
 	}

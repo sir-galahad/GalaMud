@@ -28,11 +28,21 @@ namespace TestClient
 		byte Command;
 		byte option;
 		TelnetStatus status;
-		public MudConnection(Socket s,Dungeon d)
+		public string PlayerName{
+			get
+			{
+				if(Interpreter==null||Interpreter.Player==null)
+				{
+					return null;
+				}
+				return Interpreter.Player.Name;
+				
+			}
+		}
+		public MudConnection(MudServer server,Socket s,Dungeon d)
 		{
-			
 			ConnectionSocket=s;	
-			Interpreter=new MudInterpreter(this,d);
+			Interpreter=new MudInterpreter(server,this,d);
 		}
 		
 		public void SendString(string output)
@@ -41,6 +51,7 @@ namespace TestClient
 			if(!ConnectionSocket.Connected)
 			{
 				return;
+				
 			}
 			lock(lockObject)
 			{
