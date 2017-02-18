@@ -45,6 +45,7 @@ namespace TestClient
 				return names.ToArray();
 			}
 		}
+		
 		public void Start()
 		{
 			
@@ -92,6 +93,11 @@ namespace TestClient
 			Socket s=Listener.Accept();
 			Sockets.Add(s,new MudConnection(this,s,MudDungeon));
 			
+		}
+		
+		void RemoveConnection(MudConnection con)
+		{
+			Sockets.Remove(con.ConnectionSocket);
 		}
 	}
 }

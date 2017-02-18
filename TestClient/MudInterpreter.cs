@@ -229,13 +229,13 @@ namespace TestClient
 		
 		void HelpCommand(string args)
 		{
-			string message="Available Actions:\n\t ";
+			string message="Available Actions:\r\n\t ";
 			foreach(string s in Player.GetActionList())
 			{
 				message=string.Format("{0} {1}",message,s);
 			}
 			
-			message+="\nAvailable commands:\n\t";
+			message+="\r\nAvailable commands:\r\n\t";
 			foreach(string s in Commands.Keys)
 			{
 				message=string.Format("{0} {1}",message,s);
@@ -246,7 +246,7 @@ namespace TestClient
 		
 		void InventoryCommand(string args)
 		{
-			string message="Inventory:\n";
+			string message="Inventory:\r\n";
 			string[] inventory=Player.GetInventory().ToArray();
 			if(inventory.Length==0)
 			{
@@ -256,7 +256,7 @@ namespace TestClient
 			}
 			foreach(string s in inventory)
 			{
-				message=string.Format("{0}   {1} x{2}\n",message,s,Player.GetItemCount(s));
+				message=string.Format("{0}   {1} x{2}\r\n",message,s,Player.GetItemCount(s));
 			}
 			Player.NotifyPlayer(message);
 		}
