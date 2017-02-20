@@ -20,7 +20,7 @@ namespace TestClient
 	/// </summary>
 	public class MudInterpreter
 	{
-		enum InterpreterState{NeworContinue,WaitingForUser,WaitingForPassword,Standard};
+		enum InterpreterState{NeworContinue,WaitingForUser,WaitingForPassword,WaitingForClass,Standard};
 		InterpreterState status=InterpreterState.WaitingForUser;
 		MudConnection Connection;
 		public PlayerCharacter Player{get;private set;}
@@ -29,6 +29,7 @@ namespace TestClient
 		bool Continue;
 		Dictionary<string,Action<string>> Commands=new Dictionary<string, Action<string>>();
 		string user=null;
+		string userClass=null;
 		string pass=null;
 		string salt=null;
 		MySqlSimplifier database=MySqlSimplifier.GetInstance();
@@ -98,6 +99,7 @@ namespace TestClient
 		
 		void Initialize(string input)
 		{
+			PlayerCharacterFactory f=new PlayerCharacterFactory();
 			if(input.Length==0)
 			{
 				return;
@@ -134,13 +136,49 @@ namespace TestClient
 						Connection.SendString("username: ");
 					}else{
 						user=input;
-						Connection.SendString("password: ");
-						if(Continue&&exists){
-							salt=database.GetPlayerSalt(user);
+						if(Continue)
+						{
+							Connection.SendString("password: ");
+							if(exists){
+								salt=database.GetPlayerSalt(user);
+							}
+							status=InterpreterState.WaitingForPassword;
+							
+						}else{
+							Connection.SendString("Choose a class:\r\n");
+							foreach(string s in f.GetAvailableClasses())
+							{
+								Connection.SendString(s+"\r\n");
+							}
+							status=InterpreterState.WaitingForClass;
 						}
-						status=InterpreterState.WaitingForPassword;
 					}
 					
+					break;
+				case InterpreterState.WaitingForClass:
+					input=input.ToLower().Trim();
+					bool classExists=false;
+					foreach(string s in f.GetAvailableClasses())
+					{
+						if(s==input)
+						{
+							classExists=true;
+							break;
+						}
+					}
+					if(!classExists)
+					{
+						Connection.SendString("No such class");
+						Connection.SendString("Choose a class:\r\n");
+						foreach(string s in f.GetAvailableClasses())
+						{
+							Connection.SendString(s+"\r\n");
+						}
+					}else{
+						userClass=input;
+						status=InterpreterState.WaitingForPassword;
+						Connection.SendString("Password: ");
+					}
 					break;
 					
 				case InterpreterState.WaitingForPassword:
@@ -165,7 +203,7 @@ namespace TestClient
 					if(!Continue &&hashString==pass)
 					{
 						Console.WriteLine("{0} ({1})",pass,pass.Length);
-						Player=new PlayerWarrior(user);
+						Player=f.GetInstanceByClass(userClass,user,1,0);
 						database.StorePlayer(Player);
 						database.StoreUserandPass(user,salt,pass);
 					

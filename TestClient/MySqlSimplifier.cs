@@ -55,7 +55,8 @@ namespace TestClient
 		
 		MySqlDataReader Command(string command)
 		{
-			if((connection.State==ConnectionState.Closed))
+			
+			if((connection.State==ConnectionState.Closed)||!connection.Ping())
 			{
 				CreateDataBase();
 			}
@@ -113,10 +114,10 @@ namespace TestClient
 			{
 				armor=p.EquipedArmor.Name;
 			}
-			
+			string playerclass=PlayerCharacterFactory.GetPlayerClassName(p);
 			lock(lockObject){
 				Command(string.Format("REPLACE INTO players(lowerName,name,class,level,experience,weapon,armor) VALUE ('{0}','{1}','{2}',{3},{4}," +
-				                      "'{5}','{6}');",p.Name.ToLower(),p.Name,"warrior",p.Level,p.Experience,weapon,armor)).Close();
+				                      "'{5}','{6}');",p.Name.ToLower(),p.Name,playerclass,p.Level,p.Experience,weapon,armor)).Close();
 			}
 		}
 		
@@ -140,6 +141,7 @@ namespace TestClient
 			Inventory inventory=new Inventory();
 			lock(lockObject)
 			{
+				PlayerCharacterFactory f=new PlayerCharacterFactory();
 				reader=Command(string.Format("SELECT * FROM players WHERE lowerName='{0}';",name.ToLower()));
 				reader.Read();
 				realName=reader.GetString("name");
@@ -149,7 +151,7 @@ namespace TestClient
 				weapon=reader.GetString("weapon");
 				armor=reader.GetString("armor");
 				reader.Close();
-				player=new PlayerWarrior(realName,level,experience);
+				player=f.GetInstanceByClass(playerClass,realName,level,experience);
 				reader=Command(string.Format("SELECT * FROM inventory WHERE lowerName='{0}';",name.ToLower()));
 				while(reader.Read())
 				{

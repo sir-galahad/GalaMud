@@ -51,18 +51,22 @@
     <Compile Include="Actions\BonkAction.cs" />
     <Compile Include="Actions\CharacterAction.cs" />
     <Compile Include="Actions\EquipAction.cs" />
+    <Compile Include="Actions\MageAttack.cs" />
     <Compile Include="Actions\MoveAction.cs" />
     <Compile Include="Actions\NullAction.cs" />
     <Compile Include="Actions\TargetedAction.cs" />
     <Compile Include="Actions\UseAction.cs" />
+    <Compile Include="Characters\MageCharacter.cs" />
     <Compile Include="Characters\MudCharacter.cs" />
     <Compile Include="Characters\NpcCharacters\BasicMob.cs" />
     <Compile Include="Characters\NpcCharacters\NpcCharacter.cs" />
     <Compile Include="Characters\NpcCharacters\NpcFactory.cs" />
     <Compile Include="Characters\NpcCharacters\Weakling.cs" />
     <Compile Include="Characters\PlayerCharacter.cs" />
-    <Compile Include="Characters\PlayerWarrior.cs" />
+    <Compile Include="Characters\PlayerCharacterFactory.cs" />
+    <Compile Include="Characters\WarriorCharacter.cs" />
     <Compile Include="Dungeon.cs" />
+    <Compile Include="Effects\BurnEffect.cs" />
     <Compile Include="Effects\IEffect.cs" />
     <Compile Include="Effects\StunEffect.cs" />
     <Compile Include="HealingRoom.cs" />
@@ -79,6 +83,7 @@
     <Compile Include="DungeonPosition.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DungeonRoom.cs" />
+    <Compile Include="RandomNumberGenerator.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Actions" />

@@ -53,7 +53,8 @@ namespace Mud.Actions
 				if(e.GetName().ToLower()=="stun")
 					return string.Format("\t{0} attempted to stun {1}, but {1} is already stunned",Character.StatusString(),Target.StatusString());
 			}
-			Target.Effects.Add(new StunEffect(Character,Target,3));
+			IEffect bleh=new StunEffect(Character,3);
+			bleh.Setup(Target);
 			return string.Format("\t{0} BONKS {1} over the head doing no damage, but stunning them",Character.StatusString(),Target.StatusString());
 		}
 	}

@@ -18,10 +18,11 @@ namespace Mud.Characters
 	public class MudCharacter
 	{
 		protected Dictionary<string,ActionBuilder> ActionList=new Dictionary<string, ActionBuilder>();
-		//public event Action<MudCharacter,string> NotifyPlayer;
+		public event Action<MudCharacter> OnStartTurn;
+		public event Action<MudCharacter> OnEndTurn;
 		public string Name{get;private set;}
 		public List<IEffect> Effects=new List<IEffect>();
-		//public virtual bool IsPlayer{get{return false;}set{}}
+		
 		public virtual int HitPoints{get;protected set;}
 		public virtual int MaxHitPoints{get;protected set;}
 		public virtual int Armor{get;protected set;}
@@ -68,13 +69,19 @@ namespace Mud.Characters
 		
 		public virtual void StartTurn()
 		{
-			foreach(IEffect e in Effects.ToArray())
+			if(OnStartTurn!=null)
 			{
-				e.StartTurn();
+				OnStartTurn(this);
 			}
-		
 		}
 		
+		public virtual void EndTurn()
+		{
+			if(OnEndTurn!=null)
+			{
+				OnEndTurn(this);
+			}
+		}
 	
 		public virtual void SetRoom(DungeonRoom room)
 		{
@@ -90,6 +97,7 @@ namespace Mud.Characters
 		{
 			ActionList.Add(b.Name,b);
 		}
+		
 		public ActionBuilder GetAction(string name)
 		{
 			try{
@@ -98,6 +106,7 @@ namespace Mud.Characters
 				return null;
 			}
 		}
+		
 		public string[] GetActionList()
 		{
 			string[] actions=new string[ActionList.Keys.Count];

@@ -7,6 +7,7 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
+using Mud.Characters;
 
 namespace Mud.Effects
 {
@@ -16,7 +17,9 @@ namespace Mud.Effects
 	public interface IEffect
 	{
 		string GetName();
-		void StartTurn();
+		string GetOwner();
+		void Setup(MudCharacter target);
+		void Remove();
 		
 	}
 }

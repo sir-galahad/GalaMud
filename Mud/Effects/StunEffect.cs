@@ -19,10 +19,9 @@ namespace Mud.Effects
 		MudCharacter Creator;
 		MudCharacter Target;
 		int Duration;
-		public StunEffect(MudCharacter creator, MudCharacter target, int duration)
+		public StunEffect(MudCharacter creator, int duration)
 		{
 			Creator=creator;
-			Target=target;
 			Duration=duration;
 		}
 		
@@ -31,10 +30,33 @@ namespace Mud.Effects
 			return "Stun";
 		}
 		
-		public void StartTurn()
+		public string GetOwner()
+		{
+			return Creator.Name;
+		}
+		
+		public void Setup(MudCharacter target)
+		{
+			if(target==null)
+			{
+				return;
+			}
+			
+			Target=target;
+			target.Effects.Add(this);
+			target.OnStartTurn+=StartTurn;
+		}
+		
+		public void Remove()
+		{
+			Target.Effects.Remove(this);
+			Target.OnStartTurn-=StartTurn;
+		}
+		
+		public void StartTurn(MudCharacter t)
 		{
 			if(Duration==0){
-				Target.Effects.Remove(this);
+				Remove();
 				return;
 			}
 			Duration--;

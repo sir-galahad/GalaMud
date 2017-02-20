@@ -262,6 +262,16 @@ namespace Mud
 						}
 						
 					}
+					foreach(MudCharacter c in GetCharactersInRoom())
+					{
+						c.EndTurn();
+						if(c.HitPoints<=0)
+						{
+							NotifyPlayers("\t{0} has died.",c.StatusString());
+							c.OnDeath();
+							RemoveCharacter(c);
+ 						}
+					}
 					Status=GenerateStatus();
 				}	
 				

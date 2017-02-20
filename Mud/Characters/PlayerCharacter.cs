@@ -9,6 +9,7 @@
 using System;
 using System.Collections.Generic;
 using Mud.Items;
+using Mud.Actions;
 
 namespace Mud.Characters
 {
@@ -67,6 +68,10 @@ namespace Mud.Characters
 			EquipedWeapon=null;
 			EquipedArmor=null;
 			this.HitPoints=MaxHitPoints;
+			
+			AddActionToList(MoveAction.GetActionBuilder());
+			AddActionToList(UseAction.GetActionBuilder());
+			AddActionToList(EquipAction.GetActionBuilder());
 		}
 		
 		public PlayerCharacter(string name,int level,int experience):base(name)
@@ -76,6 +81,9 @@ namespace Mud.Characters
 			Level=level;
 			Experience=experience;
 			this.HitPoints=MaxHitPoints;
+			AddActionToList(MoveAction.GetActionBuilder());
+			AddActionToList(UseAction.GetActionBuilder());
+			AddActionToList(EquipAction.GetActionBuilder());
 		}
 		
 		public void SetInventory(Inventory inventory)
