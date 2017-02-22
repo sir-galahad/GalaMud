@@ -51,8 +51,17 @@ namespace Mud.Characters
 			///<summary>
 			/// returns the damage actually taken
 			/// </summary>
+			int totaldamage=damage;
+			int damageAbsorbed=0;
+			int threshhold=(int)(damage*0.9);
 			if(damage==0)return 0;
+			damageAbsorbed=damage;
 			damage-=Armor/2;
+			damageAbsorbed-=damage;
+			if(damageAbsorbed>threshhold)
+			{
+				damage=totaldamage-threshhold;
+			}
 			if(damage<0)
 				damage=0;
 			this.HitPoints-=damage;
