@@ -18,7 +18,10 @@ namespace Mud
 {
 	/// <summary>
 	/// Description of Room.
-	/// </summary>
+	/// </summary>IDYLY   AX   BOCBMX   BU   YBXM   XZOKIAZU
+
+	[Flags] public enum MudDirections{North=1,South=2,East=4,West=8}
+	
 	public class DungeonRoom
 	{
 		public string Message{get;set;}

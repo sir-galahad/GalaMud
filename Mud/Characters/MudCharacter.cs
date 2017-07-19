@@ -22,7 +22,7 @@ namespace Mud.Characters
 		public event Action<MudCharacter> OnEndTurn;
 		public string Name{get;private set;}
 		public List<IEffect> Effects=new List<IEffect>();
-		
+		protected int armorMod=2;
 		public virtual int HitPoints{get;protected set;}
 		public virtual int MaxHitPoints{get;protected set;}
 		public virtual int Armor{get;protected set;}
@@ -56,7 +56,7 @@ namespace Mud.Characters
 			int threshhold=(int)(damage*0.9);
 			if(damage==0)return 0;
 			damageAbsorbed=damage;
-			damage-=Armor/2;
+			damage-=Armor/armorMod;
 			damageAbsorbed-=damage;
 			if(damageAbsorbed>threshhold)
 			{
@@ -68,6 +68,7 @@ namespace Mud.Characters
 			if(HitPoints<0)HitPoints=0;
 			return damage;	
 		}
+		
 		public virtual string StatusString()
 		{
 			string name="";

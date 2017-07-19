@@ -15,15 +15,17 @@ namespace Mud.Characters
 	/// </summary>
 	public class MageCharacter:PlayerCharacter
 	{
-		
+	
 		public MageCharacter(string name):base(name)
 		{
 			AddActionToList(MageAttack.GetActionBuilder());
+			armorMod=3;
 		}
 		
 		public MageCharacter(string name,int level,int experience):base(name,level,experience)
 		{
 			AddActionToList(MageAttack.GetActionBuilder());
+			armorMod=3;
 		}
 	}
 }

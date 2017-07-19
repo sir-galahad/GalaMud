@@ -57,10 +57,9 @@ namespace Mud.Actions
 			{
 				return string.Format("No available target for {0}'s attack",Character.Name);
 			}
-			double dmg=Character.Power;
+			double dmg=Character.Power*0.75;
 			double modifier=((double) RandomNumberGenerator.GetRand(40,61))/50.0;
 			dmg=(modifier*dmg);
-			Console.WriteLine(dmg.ToString());
 			int dmgdone=Target.TakeDamage(Character,(int)dmg);
 			foreach(IEffect e in Target.Effects)
 			{
