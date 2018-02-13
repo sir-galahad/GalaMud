@@ -13,14 +13,14 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 using Mud;
+
 namespace Mud.Interface
 {
 	/// <summary>
 	/// Description of MudConnection.
 	/// </summary>
-	enum TelnetStatus{standard,awaitCommand, awaitOption,opNegotiation}
 	
-	public class MudConnection
+	public class MudConnectionJson : MudConnection
 	{	object lockObject=new object();
 		MudInterpreter Interpreter=null;
 		public readonly Socket ConnectionSocket;
@@ -39,8 +39,9 @@ namespace Mud.Interface
 				
 			}
 		}
-		public MudConnection(MudServer server,Socket s,Dungeon d)
+		public MudConnectionJson(MudServer server,Socket s,Dungeon d):base (server,s,d)
 		{
+
 			ConnectionSocket=s;	
 			Interpreter=new MudInterpreter(server,this,d);
 		}
@@ -69,8 +70,7 @@ namespace Mud.Interface
 		{
 		
 			byte[] buffer=new byte[10];
-			
-			
+
 			int received=0;
 			StreamReader reader=new StreamReader(stream);
 
@@ -84,15 +84,18 @@ namespace Mud.Interface
 					Interpreter.Shutdown();
 					break;
 				}
+
 				if(received==0)
 				{
 					ConnectionSocket.Close();
 					Interpreter.Shutdown();
 					return;
 				}
+
 				for(int x=0;x<received;x++)
 				{
 					byte b=buffer[x];
+
 					switch(status)
 					{
 						case TelnetStatus.standard:

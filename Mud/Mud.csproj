@@ -99,6 +99,7 @@
     <Compile Include="Interface\Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Interface\SqlSimplifier.cs" />
+    <Compile Include="Interface\MudConnectionJson.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Characters\" />

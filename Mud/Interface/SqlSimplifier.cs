@@ -192,7 +192,7 @@ namespace Mud.Interface
 			{
 				Command(string.Format(
 					@"INSERT INTO GalaMUD.inventory (lowerName,item,count)
-						VALUE ('{0}','{1}',{2})
+						VALUES ('{0}','{1}',{2})
 						ON CONFLICT(lowerName,item) DO UPDATE SET
 							count=EXCLUDED.count;",
 					playername.ToLower(),itemName,count)
