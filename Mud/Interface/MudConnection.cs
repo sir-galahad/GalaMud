@@ -11,23 +11,26 @@ using System.Net.Sockets;
 using Mud.Characters;
 using System.IO;
 using System.Text;
+using System.Net.Security;
 using System.Collections.Generic;
 using Mud;
-
 namespace Mud.Interface
 {
 	/// <summary>
 	/// Description of MudConnection.
 	/// </summary>
+	enum TelnetStatus{standard,awaitCommand, awaitOption,opNegotiation}
 	
-	public class MudConnectionJson : MudConnection
+	public class MudConnection
 	{	object lockObject=new object();
 		MudInterpreter Interpreter=null;
 		public readonly Socket ConnectionSocket;
+		public readonly Stream SecureStream;
 		MemoryStream stream=new MemoryStream();
 		byte Command;
 		byte option;
 		TelnetStatus status;
+
 		public string PlayerName{
 			get
 			{
@@ -39,10 +42,11 @@ namespace Mud.Interface
 				
 			}
 		}
-		public MudConnectionJson(MudServer server,Socket s,Dungeon d):base (server,s,d)
-		{
 
+		public MudConnection(MudServer server,Socket s,Dungeon d)
+		{
 			ConnectionSocket=s;	
+			SecureStream = new NetworkStream (s);
 			Interpreter=new MudInterpreter(server,this,d);
 		}
 		
@@ -58,8 +62,11 @@ namespace Mud.Interface
 			{
 				try
 				{
-					ConnectionSocket.Send(buffer);
+					SecureStream.Write(buffer,0,buffer.Length);
 				}catch(SocketException){
+					ConnectionSocket.Close();
+					Interpreter.Shutdown();
+				}catch(IOException){
 					ConnectionSocket.Close();
 					Interpreter.Shutdown();
 				}
@@ -70,7 +77,8 @@ namespace Mud.Interface
 		{
 		
 			byte[] buffer=new byte[10];
-
+			
+			
 			int received=0;
 			StreamReader reader=new StreamReader(stream);
 
@@ -78,24 +86,22 @@ namespace Mud.Interface
 			{
 				try
 				{
-					received=ConnectionSocket.Receive(buffer,buffer.Length,SocketFlags.None);
+					//received=ConnectionSocket.Receive(buffer,buffer.Length,SocketFlags.None);
+					received=SecureStream.Read(buffer,0,buffer.Length);
 				}catch(SocketException){
 					ConnectionSocket.Close();
 					Interpreter.Shutdown();
 					break;
 				}
-
 				if(received==0)
 				{
 					ConnectionSocket.Close();
 					Interpreter.Shutdown();
 					return;
 				}
-
 				for(int x=0;x<received;x++)
 				{
 					byte b=buffer[x];
-
 					switch(status)
 					{
 						case TelnetStatus.standard:

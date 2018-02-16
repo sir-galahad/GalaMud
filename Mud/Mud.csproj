@@ -93,13 +93,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DungeonRoom.cs" />
     <Compile Include="RandomNumberGenerator.cs" />
-    <Compile Include="Interface\MudConnection.cs" />
     <Compile Include="Interface\MudInterpreter.cs" />
     <Compile Include="Interface\MudServer.cs" />
     <Compile Include="Interface\Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Interface\SqlSimplifier.cs" />
-    <Compile Include="Interface\MudConnectionJson.cs" />
+    <Compile Include="Interface\MudConnection.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Characters\" />

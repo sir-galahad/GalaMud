@@ -169,15 +169,18 @@ namespace Mud
 		
 		void ExecuteQueue()
 		{	
+
 			try{
 				bool ready=false;
-				foreach(MudCharacter character in NonPlayersInRoom)
-				{
-					character.StartTurn();
-				}
-				foreach(MudCharacter character in PlayersInRoom)
-				{
-					character.StartTurn();
+				lock(lockobject){
+					foreach(MudCharacter character in NonPlayersInRoom)
+					{
+						character.StartTurn();
+					}
+					foreach(MudCharacter character in PlayersInRoom)
+					{
+						character.StartTurn();
+					}
 				}
 				//give all characters a chance to put in an action
 				while(!ready)
