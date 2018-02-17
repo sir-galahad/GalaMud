@@ -14,6 +14,7 @@ using System.Text;
 using Mud.Actions;
 using Mud.Characters;
 using Mud.Characters.NpcCharacters;
+using Mud.Misc;
 namespace Mud
 {
 	/// <summary>
@@ -31,7 +32,7 @@ namespace Mud
 		Object lockobject=new Object();
 		List<MudCharacter> NonPlayersInRoom=new List<MudCharacter>();
 		List<PlayerCharacter> PlayersInRoom=new List<PlayerCharacter>();
-		Queue<CharacterAction> ActionQueue=new Queue<CharacterAction>();
+		ShuffleQueue<CharacterAction> ActionQueue=new ShuffleQueue<CharacterAction>();
 		DateTime time=DateTime.MinValue;
 		public readonly DungeonPosition Position;
 		Dungeon parentDungeon;

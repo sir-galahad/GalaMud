@@ -99,10 +99,12 @@
     <Compile Include="Program.cs" />
     <Compile Include="Interface\SqlSimplifier.cs" />
     <Compile Include="Interface\MudConnection.cs" />
+    <Compile Include="Misc\ShuffleQueue.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Characters\" />
     <Folder Include="Interface\" />
+    <Folder Include="Misc\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
