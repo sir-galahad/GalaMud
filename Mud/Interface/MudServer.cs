@@ -77,7 +77,12 @@ namespace Mud.Interface
 						//Console.WriteLine(x.ToString());
 						
 						//Console.WriteLine("other");
-						Sockets[s].ReadNetwork();
+						try{
+							Sockets[s].ReadNetwork();
+						}catch(IOException ex){
+							Sockets.Remove (s);
+						}
+
 						if(!s.Connected)
 						{
 							Sockets.Remove(s);
@@ -93,7 +98,7 @@ namespace Mud.Interface
 		void NewConnection()
 		{
 			Socket s=Listener.Accept();
-			Sockets.Add(s,new MudConnection(this,s,MudDungeon));
+			//Sockets.Add(s,new MudConnection(this,s,MudDungeon));
 			
 		}
 		

@@ -19,10 +19,14 @@ namespace Mud.Actions
 		static Random RandGen=new Random();
 		public static ActionBuilder GetActionBuilder()
 		{
-			return new ActionBuilder("attack",
-			                         (o)=>{return new AttackAction(o.Sender,o.Target);},
-			                         new Func<MudCharacter, string, ActionArgs>(GetArgs),
-			                         false);
+			return new ActionBuilder(
+				"attack",
+				"Attack charactor",
+				new ArgumentType[]{ArgumentType.character},
+				(o)=>{return new AttackAction(o.Sender,o.Target);},
+				new Func<MudCharacter, string, ActionArgs>(GetArgs),
+				false
+			);
 		}
 		
 		public static ActionArgs GetArgs(MudCharacter sender,string input)

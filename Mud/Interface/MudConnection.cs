@@ -23,10 +23,11 @@ namespace Mud.Interface
 	
 	public class MudConnection
 	{	object lockObject=new object();
-		MudInterpreter Interpreter=null;
+		MudInterpreterXml Interpreter=null;
 		public readonly Socket ConnectionSocket;
 		public readonly Stream SecureStream;
-		MemoryStream stream=new MemoryStream();
+		StreamReader reader;
+		StreamWriter writer;
 		byte Command;
 		byte option;
 		TelnetStatus status;
@@ -43,26 +44,33 @@ namespace Mud.Interface
 			}
 		}
 
-		public MudConnection(MudServer server,Socket s,Dungeon d)
+		public MudConnection(MudServerXml server,Socket s,Dungeon d)
 		{
 			ConnectionSocket=s;	
 			SecureStream = new NetworkStream (s);
-			Interpreter=new MudInterpreter(server,this,d);
+
+			reader = new StreamReader(SecureStream);
+			writer = new StreamWriter (SecureStream);
+			writer.AutoFlush = true;
+			Interpreter=new MudInterpreterXml(server,this,d);
 		}
 		
 		public void SendString(string output)
 		{
+			Console.WriteLine ("sending {0}", output);
 			byte[] buffer=Encoding.UTF8.GetBytes(output);
 			if(!ConnectionSocket.Connected)
 			{
-				return;
-				
+				return;		
 			}
 			lock(lockObject)
 			{
 				try
 				{
-					SecureStream.Write(buffer,0,buffer.Length);
+					Console.WriteLine("writing {0} bytes",buffer.Length);
+					//SecureStream.Write(buffer,0,buffer.Length);
+					writer.WriteLine(output);
+					//SecureStream.Flush();
 				}catch(SocketException){
 					ConnectionSocket.Close();
 					Interpreter.Shutdown();
@@ -75,72 +83,40 @@ namespace Mud.Interface
 		
 		public void ReadNetwork()
 		{
-		
-			byte[] buffer=new byte[10];
-			
-			
-			int received=0;
-			StreamReader reader=new StreamReader(stream);
+			//byte[] buffer =new byte[4096];
+			string xml;
 
-			while(ConnectionSocket.Poll(0,SelectMode.SelectRead))
+			//StreamReader reader=new StreamReader(SecureStream);
+			try
 			{
-				try
-				{
-					//received=ConnectionSocket.Receive(buffer,buffer.Length,SocketFlags.None);
-					received=SecureStream.Read(buffer,0,buffer.Length);
-				}catch(SocketException){
-					ConnectionSocket.Close();
-					Interpreter.Shutdown();
-					break;
-				}
-				if(received==0)
-				{
-					ConnectionSocket.Close();
-					Interpreter.Shutdown();
-					return;
-				}
-				for(int x=0;x<received;x++)
-				{
-					byte b=buffer[x];
-					switch(status)
-					{
-						case TelnetStatus.standard:
-							if(b==255){
-								status=TelnetStatus.awaitCommand;
-							}else{
-								stream.WriteByte(b);
-							}
-							break;
-						
-						case TelnetStatus.awaitCommand:
-							AcceptCommand(b);
-							break;
-						case TelnetStatus.opNegotiation:
-							if(b==240)
-							{
-								status=TelnetStatus.standard;
-							}
-							break;
-						case TelnetStatus.awaitOption:
-							option=b;
-							//deal with option here
-							status=TelnetStatus.standard;
-							break;
-					}
-				}
+				//received=ConnectionSocket.Receive(buffer,buffer.Length,SocketFlags.None);
+				//received = SecureStream.Read(buffer,0,4096);
+				xml = reader.ReadLine();
+
+				Console.WriteLine("input{0}",xml);
+			}catch(SocketException){
+				ConnectionSocket.Close();
+				Interpreter.Shutdown();
+				return;
 			}
-			stream.Seek(0,SeekOrigin.Begin);
-			while(!reader.EndOfStream)
+
+			if(xml == null)
 			{
-				string line=reader.ReadLine();
-				Interpreter.HandleInput(line);
+				ConnectionSocket.Close();
+				Interpreter.Shutdown();
+				return;
 			}
-			stream.SetLength(0);
+
+			//while(!reader.EndOfStream)
+			{
+				//string line=reader.ReadLine();
+				Interpreter.HandleInput(xml);
+			}
 			
 			
 		}
 		
-		void AcceptCommand(byte command)
+		/*void AcceptCommand(byte command)
 		{
 			switch(command)
 			{
@@ -201,6 +177,6 @@ namespace Mud.Interface
 					status=TelnetStatus.awaitOption;
 					break;
 			}
-		}
+		}*/
 	}
 }

@@ -19,10 +19,14 @@ namespace Mud.Actions
 		string Message;
 		public static ActionBuilder GetActionBuilder()
 		{
-			return new ActionBuilder("wait",
-			                         O=>{return new NullAction(O.Sender,"waits a turn");},
-			                         new Func<MudCharacter, string, ActionArgs>(GetArgs),
-			                         true);
+			return new ActionBuilder(
+				"wait",
+				"Wait a turn",
+				new ArgumentType[]{},
+				O=>{return new NullAction(O.Sender,"waits a turn");},
+				new Func<MudCharacter, string, ActionArgs>(GetArgs),
+				true
+			);
 			                         
 		}
 		public static ActionArgs GetArgs(MudCharacter sender,string input)

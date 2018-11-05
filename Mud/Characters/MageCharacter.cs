@@ -8,6 +8,7 @@
  */
 using System;
 using Mud.Actions;
+using Mud.Interface;
 namespace Mud.Characters
 {
 	/// <summary>
@@ -16,14 +17,16 @@ namespace Mud.Characters
 	public class MageCharacter:PlayerCharacter
 	{
 	
-		public MageCharacter(string name):base(name)
+		public MageCharacter(string name, MudConnection conn):base(name,conn)
 		{
+			this.Description = "Mages are capable of doing the most overall damage, but are also the most susceptable to damage as well";
 			AddActionToList(MageAttack.GetActionBuilder());
 			armorMod=3;
 		}
 		
-		public MageCharacter(string name,int level,int experience):base(name,level,experience)
+		public MageCharacter(string name,int level,int experience, MudConnection conn):base(name,level,experience, conn)
 		{
+			this.Description = "Mages are capable of doing the most overall damage, but are also the most susceptable to damage as well";
 			AddActionToList(MageAttack.GetActionBuilder());
 			armorMod=3;
 		}

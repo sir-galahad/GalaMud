@@ -10,6 +10,9 @@ using System;
 using Mud.Characters;
 namespace Mud.Actions
 {
+	public enum ArgumentType {none,direction,character,item}
+
+
 	/// <summary>
 	/// Description of ActionBuilder.
 	/// </summary>
@@ -19,15 +22,24 @@ namespace Mud.Actions
 		public readonly Func<ActionArgs,CharacterAction> BuildAction;
 		public readonly Func<MudCharacter,string,ActionArgs>TranslateArgs;
 		public readonly Boolean IsBeneficial;
-		public ActionBuilder(string name,Func<ActionArgs,CharacterAction>builder,Func<MudCharacter,string,ActionArgs>translator,bool beneficial)
+		public static readonly string[] ArgumentTypes = {"None","Direction","Character","Item"};
+		public readonly ArgumentType[] Arguments;
+		public readonly string Description;
+		public ActionBuilder(
+							 string name,
+							 string description,
+							 ArgumentType[] args,
+		                     Func<ActionArgs, CharacterAction> builder,
+							 Func<MudCharacter, string,ActionArgs> translator,
+							 bool beneficial
+							)
 		{
 			Name=name.ToLower();
+			Description = description;
+			Arguments=args;
 			BuildAction=builder;
 			IsBeneficial=beneficial;
 			TranslateArgs=translator;
 		}
-		
-		
-		
 	}
 }

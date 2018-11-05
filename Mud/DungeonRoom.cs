@@ -15,6 +15,7 @@ using Mud.Actions;
 using Mud.Characters;
 using Mud.Characters.NpcCharacters;
 using Mud.Misc;
+using System.Xml;
 namespace Mud
 {
 	/// <summary>
@@ -325,6 +326,43 @@ namespace Mud
 				if(c==other){return true;}
 			}
 			return false;
+		}
+
+		public XmlNode GetStatus()
+		{
+
+			XmlDocument tmpdoc = new XmlDocument();
+			XmlNode status = tmpdoc.CreateElement("room");
+			XmlNode characters =tmpdoc.CreateElement("characters");
+			XmlNode character;
+
+			XmlNode valueNode;
+
+			lock( lockobject){
+				foreach(MudCharacter c in GetPlayersInRoom()){
+					character = c.GetStatus(tmpdoc);
+					characters.AppendChild(character);
+				}
+			}
+
+			XmlNode position = tmpdoc.CreateElement("position");
+			XmlNode coord = tmpdoc.CreateElement("xcoord");
+			valueNode = tmpdoc.CreateTextNode(this.Position.X.ToString());
+			coord.AppendChild(valueNode);
+			position.AppendChild(coord);
+			coord = tmpdoc.CreateElement("ycoord");
+			valueNode = tmpdoc.CreateTextNode(this.Position.Y.ToString());
+			coord.AppendChild(valueNode);
+			position.AppendChild(coord);
+			status.AppendChild(position);
+
+			XmlNode description = tmpdoc.CreateElement("description");
+			valueNode = tmpdoc.CreateTextNode(this.Message);
+			description.AppendChild(valueNode);
+			status.AppendChild(description);
+
+			status.AppendChild(characters);
+			return status;
 		}
 	}
 }

@@ -7,7 +7,8 @@
  * To change this template use Tools | Options | Coding | Edit Standard Headers.
  */
 using System;
-
+using System.Collections.Generic;
+using Mud.Interface;
 namespace Mud.Characters
 {
 	/// <summary>
@@ -15,20 +16,27 @@ namespace Mud.Characters
 	/// </summary>
 	public class PlayerCharacterFactory
 	{
+		public static Dictionary<string,PlayerCharacter> CharacterClasses = new Dictionary<string, PlayerCharacter>();
+
+		static PlayerCharacterFactory(){
+			CharacterClasses.Add("warrior", new WarriorCharacter("notAPlayer",null));
+			CharacterClasses.Add("mage", new MageCharacter("notAPlayer",null));
+		}
+
 		public PlayerCharacterFactory()
 		{
 		}
 		
-		public PlayerCharacter GetInstanceByClass(string PlayerClass,string name,int level, int exp)//i mean "class" here as in warrior, mage, etc. not as in a C# class
+		public PlayerCharacter GetInstanceByClass(string PlayerClass,string name,int level, int exp,MudConnection conn)//i mean "class" here as in warrior, mage, etc. not as in a C# class
 		{
 			PlayerClass=PlayerClass.ToLower();
 			switch(PlayerClass)
 			{
 				case "warrior":
-					return new WarriorCharacter(name,level,exp);
+					return new WarriorCharacter(name,level,exp,conn);
 					
 				case "mage":
-					return new MageCharacter(name,level,exp);
+					return new MageCharacter(name,level,exp,conn);
 					
 			}
 			return null;

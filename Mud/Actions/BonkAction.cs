@@ -20,6 +20,8 @@ namespace Mud.Actions
 		public static ActionBuilder GetActionBuilder()
 		{
 			return new ActionBuilder("Bonk",
+			                         "Stun a chacter making them unable to act",
+			                         new ArgumentType[]{ArgumentType.character},
 			                         (a)=>{return new BonkAction(a.Sender,a.Target);},
 			                         new Func<MudCharacter, string, ActionArgs>(GetArgs),
 			                         false);

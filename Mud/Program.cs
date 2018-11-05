@@ -31,9 +31,8 @@ namespace TestClient
 			d.AddNpcsToRoom((new string[]{"orc","orc"}),new DungeonPosition(2,0));
 			d.SetRoom(new DungeonPosition(0,1),new HealingRoom(d,new DungeonPosition(0,1)));
 			d.SetRoom(new DungeonPosition(2,2),new HealingRoom(d,new DungeonPosition(2,2)));
-			MudServer server=new MudServer(d);
-			Console.WriteLine("password for mud database");
-			string pass=Console.ReadLine().Trim();
+			MudServerXml server=new MudServerXml(d);
+			string pass = "";
 			SqlSimplifier.Setparams("127.0.0.1","mud",pass);
 			SqlSimplifier.GetInstance().CreateDataBase();
 			server.Start();
@@ -59,56 +58,7 @@ namespace TestClient
 			d.SetRoom(new DungeonPosition(0,1),new HealingRoom(d,new DungeonPosition(0,1)));
 			d.SetRoom(new DungeonPosition(2,2),new HealingRoom(d,new DungeonPosition(2,2)));
 			while(true){
-				string input=Console.ReadLine();
-				string[] inputArgs=input.Split(' ');
-				
-				if(inputArgs.Length>=1){
-					string action=inputArgs[0].ToLower();
-					string arg=input.Remove(0,action.Length);
-					try{
-						ActionBuilder builder=player.GetAction(action);
-						ActionArgs a=ActionArgs.GetActionArgs(player,arg);
-					
-						if(builder!=null && a!=null){
-							CharacterAction act=builder.BuildAction(a);
-							if(act!=null)
-							{
-								if(act is TargetedAction && ((TargetedAction)act).Target==null)
-								{
-									player.NotifyPlayer("Targeted actions must have a valid target");
-									continue;
-								}
-							player.Room.AddActionToQueue(builder.BuildAction(a));
-							}
-							
-						}
-					}catch(ArgumentException ex){
-						player.NotifyPlayer(ex.Message);
-					}
-				}
-				if(inputArgs[0].ToLower()=="help")
-				{
-					Console.Write("available actions: ");
-					foreach(string s in player.GetActionList())
-					{
-						Console.Write("{0} ",s);
-					}
-					Console.WriteLine("");
-					Console.Out.Flush();
-					
-				}
-				if(inputArgs[0].ToLower()=="inventory")
-				{
-					foreach(string s in player.GetInventory())
-					{
-						Console.WriteLine(s);
-					}
-				}
-				if(inputArgs[0].ToLower()=="status")
-				{
-					Console.WriteLine(player.StatusString());
-					Console.Out.Flush();
-				}
+
 				
 			}
 		}

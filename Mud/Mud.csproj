@@ -94,17 +94,29 @@
     <Compile Include="DungeonRoom.cs" />
     <Compile Include="RandomNumberGenerator.cs" />
     <Compile Include="Interface\MudInterpreter.cs" />
-    <Compile Include="Interface\MudServer.cs" />
+    <Compile Include="Interface\MudServer.cs">
+      <DependentUpon>MudInterpreterXml.cs</DependentUpon>
+    </Compile>
     <Compile Include="Interface\Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Interface\SqlSimplifier.cs" />
     <Compile Include="Interface\MudConnection.cs" />
     <Compile Include="Misc\ShuffleQueue.cs" />
+    <Compile Include="Interface\MudInterpreterXml.cs" />
+    <Compile Include="Interface\MudServerXml.cs" />
+    <Compile Include="Interface\ClientRequest.cs" />
+    <Compile Include="Interface\XmlMessages\ServerMessage.cs" />
+    <Compile Include="Interface\XmlMessages\XmlMessage.cs" />
+    <Compile Include="Interface\XmlMessages\VersionMessage.cs" />
+    <Compile Include="Interface\XmlMessages\ClassesMessage.cs" />
+    <Compile Include="Interface\XmlMessages\LoginReply.cs" />
+    <Compile Include="Interface\XmlMessages\UpdateMessage.cs" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Characters\" />
     <Folder Include="Interface\" />
     <Folder Include="Misc\" />
+    <Folder Include="Interface\XmlMessages\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

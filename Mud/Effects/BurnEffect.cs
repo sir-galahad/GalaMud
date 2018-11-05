@@ -69,6 +69,7 @@ namespace Mud.Effects
 		public void AddDamage(int d)
 		{
 			damage+=d;
+			Console.WriteLine ("new damage {0}", damage);
 			duration=3;
 			
 		}

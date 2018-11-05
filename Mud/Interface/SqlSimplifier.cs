@@ -163,7 +163,7 @@ namespace Mud.Interface
 				weapon=reader.GetString(4);
 				armor=reader.GetString(5);
 				reader.Close();
-				player=f.GetInstanceByClass(playerClass,realName,level,experience);
+				player=f.GetInstanceByClass(playerClass,realName,level,experience,null);
 				reader=Command(string.Format("SELECT item, count FROM GalaMUD.inventory WHERE lowerName='{0}';",name.ToLower()));
 				while(reader.Read())
 				{

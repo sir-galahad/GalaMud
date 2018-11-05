@@ -19,7 +19,10 @@ namespace Mud.Actions
 	{
 		public static ActionBuilder GetActionBuilder()
 		{
-			return new ActionBuilder("equip",O=>{
+			return new ActionBuilder("equip",
+			                         "Equip an item",
+			                         new ArgumentType[]{ArgumentType.item},
+			                         O=>{
 			                         	if((O.Sender is PlayerCharacter))
 			                         	{
 			                         		PlayerCharacter P= O.Sender as PlayerCharacter;

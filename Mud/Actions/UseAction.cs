@@ -20,8 +20,14 @@ namespace Mud.Actions
 		
 		public static ActionBuilder GetActionBuilder()
 		{
-			return new ActionBuilder("use",new Func<ActionArgs,CharacterAction>(BuildAction),
-			                         new Func<MudCharacter, string, ActionArgs>(GetArgs),true);
+			return new ActionBuilder(
+				"use",
+				"Use an item",
+				new ArgumentType[]{ArgumentType.item},
+				new Func<ActionArgs,CharacterAction>(BuildAction),
+				new Func<MudCharacter, string, ActionArgs>(GetArgs),
+				true
+			);
 		}
 		
 		static CharacterAction BuildAction(ActionArgs args)

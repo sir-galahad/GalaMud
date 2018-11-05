@@ -19,16 +19,22 @@ namespace Mud.Actions
 	{
 		public static ActionBuilder GetActionBuilder()
 		{
-			return new ActionBuilder("move",
-			                  (o)=>{
-			                  	bool validArg=false;
-			                  	foreach(string a in DirectionString)
-			                  	{
-			                  		if(a==o.Argument){validArg=true;break;}
-			                  	}
-			                  	if(validArg==false){throw new ArgumentException("move can only use one of the four cardinal directions");}
-			                  	return new MoveAction(o.Sender,o.Argument);
-			                         },new Func<MudCharacter,string, ActionArgs>(GetArgs),true);
+			return new ActionBuilder(
+				"move",
+				"Move in one of the four cardinal directions",
+				new ArgumentType[]{ArgumentType.direction},
+				(o)=>{
+					bool validArg=false;
+					foreach(string a in DirectionString)
+					{
+						if(a==o.Argument){validArg=true;break;}
+					}
+					if(validArg==false){throw new ArgumentException("move can only use one of the four cardinal directions");}
+					return new MoveAction(o.Sender,o.Argument);
+				},
+				new Func<MudCharacter,string, ActionArgs>(GetArgs),
+				true
+			);
 		}
 		public static ActionArgs GetArgs(MudCharacter sender,string input)
 		{

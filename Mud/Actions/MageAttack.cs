@@ -20,6 +20,8 @@ namespace Mud.Actions
 		public static ActionBuilder GetActionBuilder()
 		{
 			return new ActionBuilder("attack",
+			                         "Attack a character",
+			                         new ArgumentType[]{ArgumentType.character},
 			                         (o)=>{return new MageAttack(o.Sender,o.Target);},
 			                         new Func<MudCharacter, string, ActionArgs>(GetArgs),
 			                         false);
@@ -63,8 +65,10 @@ namespace Mud.Actions
 			int dmgdone=Target.TakeDamage(Character,(int)dmg);
 			foreach(IEffect e in Target.Effects)
 			{
+				Console.WriteLine ("checking for for burn");
 				if(e.GetName()=="burn" && e.GetOwner()==Character.Name)
 				{
+					Console.WriteLine ("found it");
 					(e as BurnEffect).AddDamage(((int)(dmg/3.0))+1);
 					found=true;	
 				}

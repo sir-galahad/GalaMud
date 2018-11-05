@@ -8,6 +8,7 @@
  */
 using System;
 using Mud.Actions;
+using Mud.Interface;
 namespace Mud.Characters
 {
 	/// <summary>
@@ -15,18 +16,19 @@ namespace Mud.Characters
 	/// </summary>
 	public class WarriorCharacter:PlayerCharacter
 	{
-		public WarriorCharacter(string name):base(name)
+		public WarriorCharacter(string name,MudConnection conn ):base(name,conn)
 		{
-			
+
+			this.Description = "Masters of physical combat with many tricks to subdue their enemies";
 			AddActionToList(BonkAction.GetActionBuilder());
 		
 			AddActionToList(AttackAction.GetActionBuilder());
 			
 		}
 		
-		public WarriorCharacter(string name,int level,int experience):base(name,level,experience)
+		public WarriorCharacter(string name,int level,int experience, MudConnection conn):base(name,level,experience,conn)
 		{
-			
+			this.Description = "Masters of physical combat with many tricks to subdue their enemies";
 			AddActionToList(AttackAction.GetActionBuilder());
 			
 			AddActionToList(BonkAction.GetActionBuilder());

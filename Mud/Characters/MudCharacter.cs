@@ -8,6 +8,7 @@
  */
 using System;
 using System.Collections.Generic;
+using System.Xml;
 using Mud.Actions;
 using Mud.Effects;
 namespace Mud.Characters
@@ -75,6 +76,35 @@ namespace Mud.Characters
 			name+=Name;
 			string output=string.Format("[{0} L:{1} HP:({2}/{3})]",name,Level,HitPoints,MaxHitPoints);
 			return output;
+		}
+
+		public virtual XmlNode GetStatus (XmlDocument tmpdoc)
+		{
+			XmlNode character = tmpdoc.CreateElement("character");
+			XmlNode name = tmpdoc.CreateElement("name");
+			XmlNode level = tmpdoc.CreateElement("level");
+			XmlNode hp = tmpdoc.CreateElement("hitPoints");
+			XmlNode maxHp = tmpdoc.CreateElement("maxHitPoints");
+			XmlNode valueNode;
+
+			valueNode = tmpdoc.CreateTextNode(Name);
+			name.AppendChild(valueNode);
+			character.AppendChild(name);
+
+			valueNode = tmpdoc.CreateTextNode(Level.ToString());
+			level.AppendChild(valueNode);
+			character.AppendChild(level);
+
+			valueNode = tmpdoc.CreateTextNode(HitPoints.ToString());
+			hp.AppendChild(valueNode);
+			character.AppendChild(hp);
+
+			valueNode = tmpdoc.CreateTextNode(MaxHitPoints.ToString());
+			maxHp.AppendChild(valueNode);
+			character.AppendChild(maxHp);
+
+			return character;
+
 		}
 		
 		public virtual void StartTurn()

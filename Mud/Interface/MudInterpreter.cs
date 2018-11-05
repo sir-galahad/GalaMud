@@ -26,7 +26,7 @@ namespace Mud.Interface
 		MudConnection Connection;
 		public PlayerCharacter Player{get;private set;}
 		Dungeon dungeon;
-		MudServer Server;
+		MudServerXml Server;
 		bool Continue;
 		Dictionary<string,Action<string>> Commands=new Dictionary<string, Action<string>>();
 		string user=null;
@@ -35,7 +35,7 @@ namespace Mud.Interface
 		string salt=null;
 		SqlSimplifier database=SqlSimplifier.GetInstance();
 		
-		public MudInterpreter(MudServer server,MudConnection con,Dungeon dungeon)
+		public MudInterpreter(MudServerXml server,MudConnection con,Dungeon dungeon)
 		{
 			Server=server;
 			this.dungeon=dungeon;
@@ -204,7 +204,7 @@ namespace Mud.Interface
 					if(!Continue &&hashString==pass)
 					{
 						Console.WriteLine("{0} ({1})",pass,pass.Length);
-						Player=f.GetInstanceByClass(userClass,user,1,0);
+						Player=f.GetInstanceByClass(userClass,user,1,0,Connection);
 						database.StorePlayer(Player);
 						database.StoreUserandPass(user,salt,pass);
 					
@@ -295,7 +295,7 @@ namespace Mud.Interface
 			}
 			foreach(string s in inventory)
 			{
-				message=string.Format("{0}   {1} x{2}\r\n",message,s,Player.GetItemCount(s));
+				message=string.Format("{0}  {1} x{2}\r\n",message,s,Player.GetItemCount(s));
 			}
 			Player.NotifyPlayer(message);
 		}

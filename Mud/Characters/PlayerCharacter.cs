@@ -10,6 +10,9 @@ using System;
 using System.Collections.Generic;
 using Mud.Items;
 using Mud.Actions;
+using Mud.Interface;
+using Mud.Interface.XmlMessages;
+using System.Xml;
 
 namespace Mud.Characters
 {
@@ -25,10 +28,13 @@ namespace Mud.Characters
 		public event Action<PlayerCharacter,string> ItemEquiped;
 		public event Action<PlayerCharacter,int> ExperienceGained;
 		Inventory inventory=new Inventory();
+		protected MudConnection connection;
 		public int Experience{get;private set;}
 		public MudCharacter[] Roomates{get;private set;}
 		public WeaponItem EquipedWeapon{get;protected set;}
 		public ArmorItem EquipedArmor{get;protected set;}
+		public string Description{ get; protected set;} 
+		public string CharacterClass {get; protected set;}
 		public override int Power {
 			get {
 				if(EquipedWeapon==null)return 1;
@@ -62,28 +68,35 @@ namespace Mud.Characters
 		public event Action<PlayerCharacter,string>OnNotifyPlayer;
 		// override bool IsPlayer{get{return true;}set{}}
 		
-		public PlayerCharacter(string Name):base(Name)
+		public PlayerCharacter(string Name, MudConnection conn):base(Name)
 		{
 			Experience=0;
 			EquipedWeapon=null;
-			EquipedArmor=null;
+			EquipedArmor = null;
 			this.HitPoints=MaxHitPoints;
-			
+			this.Description = "If you're reading this something has gone wrong.";
 			AddActionToList(MoveAction.GetActionBuilder());
 			AddActionToList(UseAction.GetActionBuilder());
 			AddActionToList(EquipAction.GetActionBuilder());
+			connection = conn;
 		}
 		
-		public PlayerCharacter(string name,int level,int experience):base(name)
+		public PlayerCharacter(string name,int level,int experience, MudConnection conn):base(name)
 		{
 			EquipedWeapon=null;
 			EquipedArmor=null;
 			Level=level;
 			Experience=experience;
 			this.HitPoints=MaxHitPoints;
+			this.Description = "If you're reading this something has gone wrong.";
 			AddActionToList(MoveAction.GetActionBuilder());
 			AddActionToList(UseAction.GetActionBuilder());
 			AddActionToList(EquipAction.GetActionBuilder());
+		}
+
+		public void SetConnection(MudConnection conn)
+		{
+			connection = conn;
 		}
 		
 		public void SetInventory(Inventory inventory)
@@ -93,7 +106,9 @@ namespace Mud.Characters
 		
 		public void NotifyPlayer(string msg, params object[] args)
 		{
-			OnNotifyPlayer(this,string.Format(msg, args));
+			if(OnNotifyPlayer!=null){
+				OnNotifyPlayer(this,string.Format(msg, args));
+			}
 		}
 	
 		public override void StartTurn()
@@ -267,6 +282,41 @@ namespace Mud.Characters
 			name+=Name;
 			string output=string.Format("[~{0} L:{1} HP:({2}/{3}) Pow:{4} Armor:{5}]",name,Level,HitPoints,MaxHitPoints,Power,Armor);
 			return output;
+		}
+
+		public override XmlNode GetStatus(XmlDocument tmpdoc)
+		{
+			XmlNode character = base.GetStatus(tmpdoc);
+			XmlNode nameNode,valueNode;
+
+			nameNode = tmpdoc.CreateElement("power");
+			valueNode = tmpdoc.CreateTextNode(Power.ToString());
+			nameNode.AppendChild(valueNode);
+			character.AppendChild(nameNode);
+
+			nameNode = tmpdoc.CreateElement("armor");
+			valueNode = tmpdoc.CreateTextNode(Armor.ToString());
+			nameNode.AppendChild(valueNode);
+			character.AppendChild(nameNode);
+
+			nameNode = tmpdoc.CreateElement("experience");
+			valueNode = tmpdoc.CreateTextNode(Experience.ToString());
+			nameNode.AppendChild(valueNode);
+			character.AppendChild(nameNode);
+
+			nameNode = tmpdoc.CreateElement("nextLevel");
+			valueNode = tmpdoc.CreateTextNode((Level*Level).ToString());
+			nameNode.AppendChild(valueNode);
+			character.AppendChild(nameNode);
+
+			return character;
+		}
+
+		public void SendUpdate(XmlNode messages,XmlNode stats)
+		{
+			XmlMessage msg = new UpdateMessage(this,messages,stats);
+
+			connection.SendString(msg.ToXml());
 		}
 	}
 }
